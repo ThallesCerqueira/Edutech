@@ -32,7 +32,7 @@ app.post('/exercicios', (req, res) => {
   };
 
   exercicios.push(novoExercicio);
-  res.status(201).json(novoExercicio);
+  res.status(201).json({ mensagem: 'Exercício criado com sucesso.' });
 
 });
 
@@ -76,7 +76,7 @@ app.put('/exercicios/:id', (req, res) => {
     alternativas: alternativas !== undefined ? alternativas : exercicios[indiceExercicio].alternativas,
   };
 
-  res.status(200).json(exercicios[indiceExercicio]);
+  res.status(200).json({ mensagem: 'Exercício atualizado com sucesso.' });
 
 });
 
