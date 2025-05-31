@@ -1,0 +1,93 @@
+body {
+    margin: 0;
+    display: flex;
+    font-family: Arial, sans-serif;
+    background-color: #e6e5e3; /* branco gesso */
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 80px;
+    background-color: #2d74da; /* azul */
+    height: 100vh;
+    flex-shrink: 0;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+    background-color: white;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 0 10px #e6e5e3; /* borda branco gesso */
+    overflow-y: auto;
+  }
+  
+  h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+  
+  .controle-pesquisa {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .controle-pesquisa input {
+    flex: 1;
+    max-width: 300px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  ul#lista-exercicios {
+    list-style: none;
+    padding: 0;
+  }
+  
+  ul#lista-exercicios li {
+    background-color: #b0b0b0;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+  }
+  
+  ul#lista-exercicios li .botoes {
+    display: flex;
+    gap: 5px; /* espaço pequeno entre editar e excluir */
+  }
+  
+  button {
+    background-color: #003366;
+    color: white;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-left: 0; /* removido margin-left global para evitar espaçamento extra */
+  }
+  
+  button:hover {
+    
+    background-color: #0055aa;
+  }
+
+  .botoes{
+    border-radius: 50px;
+  }
+
+  .titulo-exercicio {
+  background-color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 25px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  color: #003366;
+  font-weight: bold;
+  max-width: 70%;
+}

@@ -9,9 +9,31 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//rederizando a pagina html
+app.use(express.static('./')); 
+
 // 4. Armazenamento de Dados (em memória por enquanto)
-let exercicios = []; // Array para guardar nossos exercícios
-let proximoId = 1; // Contador simples para gerar IDs únicos
+let exercicios = [
+  {
+    id: 1,
+    titulo: "Capitais do Brasil",
+    descricao: "Qual é a capital do Brasil?",
+    mapaSelecionado: "Mapa do Brasil",
+    nivelDificuldade: "Fácil",
+    alternativas: ["São Paulo", "Brasília", "Rio de Janeiro", "Salvador"]
+  },
+  {
+    id: 2,
+    titulo: "Matemática Básica",
+    descricao: "Quanto é 9 + 6?",
+    mapaSelecionado: "Nenhum",
+    nivelDificuldade: "Fácil",
+    alternativas: ["14", "15", "16", "17"]
+  }
+];
+
+
+let proximoId = 1; // id para identificar cada elemento
 
 // 5. Definição das Rotas
 app.post('/exercicios', (req, res) => {
@@ -36,6 +58,7 @@ app.post('/exercicios', (req, res) => {
 
 });
 
+//apenas exibir os exercicios na tela
 app.get('/exercicios', (req, res) => {
     const exerciciosResumidos = exercicios.map(({ id, titulo, nivelDificuldade }) => ({
         id,

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduTech</title>
+  <link rel="stylesheet" href="index.css">
+
+</head>
+<body>
+  
+  <div class="sidebar"></div>
+  <div class="content">
+
+    <div class="cabecalho">
+      <h1>EXERCÍCIOS</h1>
+    </div>
+  <div class="controle-pesquisa">
+    <input type="text" id="campo-pesquisa" placeholder="Digite o título do exercício" />
+    <button onclick="pesquisarExercicio()">Novo Exercício</button>
+    <button onclick="pesquisarExercicio()">Pesquisar 🔍 </button>
+  </div>
+
+  <ul id="lista-exercicios"></ul>
+
+  <script>
+    const lista = document.getElementById('lista-exercicios');
+
+    function carregarExercicios() {
+      fetch('http://localhost:3000/exercicios')
+        .then(response => response.json())
+        .then(data => exibirLista(data))
+        .catch(error => console.error('Erro ao buscar exercícios:', error));
+    }
+
+    function exibirLista(data) {
+      lista.innerHTML = '';
+      data.forEach(exercicio => {
+        const item = document.createElement('li');
+        item.innerHTML = `
+          ${exercicio.titulo}
+          <div class="botoes">
+          <button onclick="editarExercicio(${exercicio.id})">🖊️</button>
+          <button onclick="excluirExercicio(${exercicio.id})">🗑️</button>
+          </div>
+          `;
+        lista.appendChild(item);
+      });
+    }
+
+    function pesquisarExercicio() {
+      const termo = document.getElementById('campo-pesquisa').value.toLowerCase();
+
+      fetch('http://localhost:3000/exercicios')
+        .then(response => response.json())
+        .then(data => {
+          const filtrados = data.filter(ex => ex.titulo.toLowerCase().includes(termo));
+          exibirLista(filtrados);
+        })
+        .catch(error => console.error('Erro ao pesquisar:', error));
+    }
+
+    function excluirExercicio(id) {
+      fetch(`http://localhost:3000/exercicios/${id}`, {
+        method: 'DELETE'
+      })
+      .then(response => response.json())
+      .then(() => {
+        alert('Exercício excluído!');
+        carregarExercicios();
+      })
+      .catch(error => console.error('Erro ao excluir:', error));
+    }
+
+    function editarExercicio(id) {
+      alert('Função de editar ainda não implementada. ID: ' + id);
+    }
+
+    carregarExercicios();
+  </script>
+    </div>
+</body>
+</html>
