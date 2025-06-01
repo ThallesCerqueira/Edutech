@@ -1,93 +1,79 @@
+/* Estilo geral da página */
 body {
-    margin: 0;
-    display: flex;
-    font-family: Arial, sans-serif;
-    background-color: #e6e5e3; /* branco gesso */
-    height: 100vh;
-  }
-  
-  .sidebar {
-    width: 80px;
-    background-color: #2d74da; /* azul */
-    height: 100vh;
-    flex-shrink: 0;
-  }
-  
-  .content {
-    flex: 1;
-    padding: 20px;
-    background-color: white;
-    margin: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 0 10px #e6e5e3; /* borda branco gesso */
-    overflow-y: auto;
-  }
-  
-  h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-  
-  .controle-pesquisa {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .controle-pesquisa input {
-    flex: 1;
-    max-width: 300px;
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  ul#lista-exercicios {
-    list-style: none;
-    padding: 0;
-  }
-  
-  ul#lista-exercicios li {
-    background-color: #b0b0b0;
-    padding: 15px 20px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-  }
-  
-  ul#lista-exercicios li .botoes {
-    display: flex;
-    gap: 5px; /* espaço pequeno entre editar e excluir */
-  }
-  
-  button {
-    background-color: #003366;
-    color: white;
-    border-radius: 5px;
-    padding: 8px 12px;
-    cursor: pointer;
-    margin-left: 0; /* removido margin-left global para evitar espaçamento extra */
-  }
-  
-  button:hover {
-    
-    background-color: #0055aa;
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
 
-  .botoes{
-    border-radius: 50px;
-  }
+/* Lista de exercícios */
+ul {
+  list-style: none;
+  padding: 0;
+}
 
-  .titulo-exercicio {
-  background-color: #ffffff;
-  padding: 10px 15px;
-  border-radius: 25px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  color: #003366;
-  font-weight: bold;
-  max-width: 70%;
+li {
+  margin-bottom: 10px;
+}
+
+button {
+  cursor: pointer;
+  padding: 6px 12px;
+  margin-right: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Sidebar lateral */
+#sidebar {
+  position: fixed;
+  top: 0;
+  right: -320px; /* Escondida inicialmente fora da tela */
+  width: 320px;
+  height: 100%;
+  background: white;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  padding: 20px;
+  box-sizing: border-box;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+#sidebar.open {
+  right: 0; /* Aparece do lado direito */
+}
+
+/* Botão fechar */
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: #333;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #007bff;
+}
+
+/* Conteúdo dentro da sidebar */
+#detalhes-exercicio h2 {
+  margin-top: 0;
+}
+
+#detalhes-exercicio img {
+  width: 100%;
+  margin: 10px 0;
+  border-radius: 6px;
 }

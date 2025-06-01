@@ -4,33 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EduTech</title>
-  <link rel="stylesheet" href="index.css">
-
+  <link rel="stylesheet" href="index.css" />
 </head>
 <body>
-  
-  <div class="sidebar"></div>
   <div class="content">
 
-    <div class="cabecalho">
-      <h1>EXERCÍCIOS</h1>
-    </div>
-  <div class="controle-pesquisa">
+    <h1>EXERCÍCIOS</h1>
+
     <input type="text" id="campo-pesquisa" placeholder="Digite o título do exercício" />
     <button onclick="pesquisarExercicio()">Novo Exercício</button>
-    <button onclick="pesquisarExercicio()">Pesquisar 🔍 </button>
-  </div>
+    <button onclick="pesquisarExercicio()">Pesquisar 🔍</button>
 
-  <ul id="lista-exercicios"></ul>
+    <ul id="lista-exercicios"></ul>
+
+    <!-- Sidebar lateral -->
+    <div id="sidebar">
+      <button class="close-btn" onclick="fecharSidebar()">×</button>
+      <div id="detalhes-exercicio"></div>
+    </div>
+
+  </div>
 
   <script>
     const lista = document.getElementById('lista-exercicios');
+    const sidebar = document.getElementById('sidebar');
+    const detalhesDiv = document.getElementById('detalhes-exercicio');
 
     function carregarExercicios() {
       fetch('http://localhost:3000/exercicios')
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => exibirLista(data))
-        .catch(error => console.error('Erro ao buscar exercícios:', error));
+        .catch(err => console.error('Erro ao buscar exercícios:', err));
     }
 
     function exibirLista(data) {
@@ -38,46 +42,62 @@
       data.forEach(exercicio => {
         const item = document.createElement('li');
         item.innerHTML = `
-          ${exercicio.titulo}
+          <button onclick="verExercicio(${exercicio.id})">${exercicio.titulo}</button>
           <div class="botoes">
-          <button onclick="editarExercicio(${exercicio.id})">🖊️</button>
-          <button onclick="excluirExercicio(${exercicio.id})">🗑️</button>
+            <button onclick="editarExercicio(${exercicio.id})">🖊️</button>
+            <button onclick="excluirExercicio(${exercicio.id})">🗑️</button>
           </div>
-          `;
+        `;
         lista.appendChild(item);
       });
     }
 
     function pesquisarExercicio() {
       const termo = document.getElementById('campo-pesquisa').value.toLowerCase();
-
       fetch('http://localhost:3000/exercicios')
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
           const filtrados = data.filter(ex => ex.titulo.toLowerCase().includes(termo));
           exibirLista(filtrados);
         })
-        .catch(error => console.error('Erro ao pesquisar:', error));
+        .catch(err => console.error('Erro ao pesquisar:', err));
     }
 
     function excluirExercicio(id) {
-      fetch(`http://localhost:3000/exercicios/${id}`, {
-        method: 'DELETE'
-      })
-      .then(response => response.json())
-      .then(() => {
-        alert('Exercício excluído!');
-        carregarExercicios();
-      })
-      .catch(error => console.error('Erro ao excluir:', error));
+      fetch(`http://localhost:3000/exercicios/${id}`, { method: 'DELETE' })
+        .then(res => res.json())
+        .then(() => {
+          alert('Exercício excluído!');
+          carregarExercicios();
+        })
+        .catch(err => console.error('Erro ao excluir:', err));
     }
 
-    function editarExercicio(id) {
-      alert('Função de editar ainda não implementada. ID: ' + id);
+    function verExercicio(id) {
+      fetch(`http://localhost:3000/exercicios/${id}`)
+        .then(res => res.json())
+        .then(exercicio => {
+          detalhesDiv.innerHTML = `
+            <h2>${exercicio.titulo}</h2>
+            <p><strong>Descrição:</strong> ${exercicio.descricao}</p>
+             <img src="./images/mapa.jpeg">
+              <p><strong>Nível:</strong> ${exercicio.nivelDificuldade}</p>
+              <p><strong>Alternativas:</strong> ${exercicio.alternativas.join(', ')}</p>
+          `;
+          abrirSidebar();
+        })
+        .catch(err => console.error('Erro ao exibir exercício:', err));
+    }
+
+    function abrirSidebar() {
+      sidebar.classList.add('open');
+    }
+
+    function fecharSidebar() {
+      sidebar.classList.remove('open');
     }
 
     carregarExercicios();
   </script>
-    </div>
 </body>
 </html>
