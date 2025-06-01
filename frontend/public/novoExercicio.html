@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/logo_edutech.png">
+    <script src="https://kit.fontawesome.com/1dc5e8d3e7.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" typ="text/css" href="./style.css">
+
+    <title>Novo Exercício</title>
+</head>
+
+<body>             
+    <div class="exercicio">
+        <h2>Novo Exercício</h2>
+
+        <div class="container-form-mapas">
+
+            <div class="box-form-mapas form">
+                <form>
+                    <h3>Título</h3>
+                    <input type="text" placeholder="Digite um título" class="texto" required>
+                    <h3>Descrição</h3>
+                    <textarea rows="5" cols="50" placeholder="Descreva o exercício" class="texto" style="resize:none;" required></textarea>
+
+                    <h3>Selecionar Mapa</h3>
+                    <button type="button" class="mapa" onclick="mostraMapa()" id="selMapa">Selecionar <i class="fa-solid fa-map icon"></i></button>
+                    <label id="ok" style="color: #014a8e; display: none;">✔</label>
+                    <input type="checkbox" style="float: right; display: none" id="checkMapa" required>
+                    
+                    <h3>Resposta Correta</h3>
+                    <input type="text" class="texto" placeholder="Digite a resposta" required>
+
+                    <h3>Nível de Dificuldade</h3>
+                    <input type="radio" name="dific" id="f" required>
+                    <label for="f">Fácil</label>
+                    <input type="radio" name="dific" id="m" required>
+                    <label for="m">Médio</label>
+                    <input type="radio" name="dific" id="d" required>
+                    <label for="d">Difícil</label> <br><br><br>
+
+                    <!-- Botões de voltar e salvar da tela -->
+                    <button class="voltar btns">Voltar</button>
+                    <button class="salvar btns">Salvar</button>
+                </form>
+            </div>
+            <div class="box-form-mapas container-mapas" id="mapa" style="display: none">
+                <h3>Mapas Salvos</h3>
+
+                <div class="container-imgs">
+
+                    <div class="box-img">
+                        <label> Mapa A </label>
+                        <img src="./images/mapaA.jpeg"/>
+                    </div>
+                    <div class="box-img">
+                        <label> Mapa B </label>
+                        <img src="./images/mapaA.jpeg"/>
+                    </div>
+                    <div class="box-img">
+                        <label> Mapa C </label>
+                        <img src="./images/mapaA.jpeg"/>
+                    </div>
+                    <div class="box-img">
+                        <label> Mapa D </label>
+                        <img src="./images/mapaA.jpeg"/>
+                    </div>
+
+
+                </div>
+
+                <div class="container-editar">
+                    <h4 style="margin: 20px 0 0 20px;">Configurar Mapa</h4>
+                    <!-- Mapa para editar -->
+                    <div class="editar-mapa">
+                        <label> Mapa A </label> <br>
+                        <img src="./images/mapaA-pontos.jpeg"/ class="img">
+                    </div>
+
+                    <!-- Botões para edição -->
+                    <div class="editar-btns">
+                        <button class="box-editar-btns"><i class="fa-solid fa-lightbulb editar-icon"></i> Dica</button>
+                        <button class="box-editar-btns"><i class="fa-regular fa-comment editar-icon"></i> Comentário</button>
+                        <button class="box-editar-btns" onclick="escondeMapa()">Salvar</button>
+                    </div>
+
+                </div>
+
+                <div></div>
+            </div>
+
+        </div>
+        
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

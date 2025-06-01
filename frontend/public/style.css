@@ -1,0 +1,267 @@
+.exercicio {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+
+h2 {
+    font-size: 35px;
+    margin: 40px 0 15px 40px;
+}
+
+
+/* Formulário de novo exercício */
+
+.form {
+    width: 30%;
+    padding: 1px 54px 56px 35px;
+    border: 1.5px solid #eeeeee;
+    border-radius: 10px;
+    background-color: #f6f6f6;
+}
+
+/* Mapas Salvos */
+
+.container-mapas {
+    width: 40%;
+    padding: 1px 35px 56px 35px;
+    /* border: 1px solid blue; */
+}
+
+/* Formulário e Mapas Salvos    pai*/
+
+.container-form-mapas { 
+    padding: 0 0 10px 0;
+    /* border: 1px solid orange; */
+}
+
+/* filhos */
+.box-form-mapas {
+    margin-left: 80px;
+    padding: 1px 54px 36px 35px;
+    background-color: #f6f6f6;
+    border: 1.5px solid #eeeeee;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.container-imgs {
+    margin: 30px 0 0 20px;
+    padding-left: 6px;
+    width: 555px;
+    height: 200px;
+    overflow-y: scroll; /* Rolagem vertical */
+    border: 1.5px solid #014a8e;
+    border-radius: 10px;
+    border-right: 0;
+}
+
+.box-img {
+    width: 28.4%;
+    padding: 10px 10px 10px 10px;
+	display: inline-block;
+    cursor: pointer;
+    /* border: 1px solid red; */
+}
+
+.box-img:hover {
+    background-color: #ededed;
+}
+
+/* .box-img:active {
+    background-color: #dddddd;
+} */
+
+div img {
+    margin-left: auto;
+    margin-right: auto;
+    padding: auto;
+    padding-top: 10px;
+    max-width:180px;
+    max-height:100px;
+    width: auto;
+    height: auto;
+    display: block;
+    /* border: 1px solid blue; */
+}
+
+
+.container-editar {
+    margin: 20px 0 0 20px;
+    border: 1.5px solid #014a8e;
+    border-radius: 10px;
+}
+
+
+.editar-mapa {
+    margin: 20px 50px 0 50px;
+    /* border: 1px solid red; */
+}
+
+.img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    height: auto;
+    max-width:400px;
+    max-height:300px;
+}
+
+.editar-btns {
+    margin: 6% 0% ;
+    width: auto;
+    display: block;
+    /* border: 1px solid red; */
+}
+
+.box-editar-btns {
+    margin-left: 7.5%; 
+    width: 125px;
+    height: 25px;
+    background-color: #003B73;
+    color: white;
+    border-radius: 5px;
+    border: none;  
+}
+
+.editar-icon {
+    margin-right: 5px; 
+    color: #eeeeee    ;
+}
+
+.box-editar-btns:hover {
+    background-color: #014a8e;
+    cursor: pointer;
+}
+
+
+
+/* Formulário de novo exercício */
+/* continuação */
+
+h3 {
+    margin: 30px 0 10px 0;
+}
+
+.texto {
+    width: 100%;
+    padding: 8px 8px 8px 16px;
+    background-color:#BDBDBD;
+    border-radius: 20px;
+    border: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.texto:focus {
+    outline: 0;
+}
+
+.texto:hover {
+    background-color: #cfcfcf;
+}
+
+/* Botão para acessar mapas */
+
+.mapa {
+    width: 150px;
+    padding: 8px 0px 8px 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color:#BDBDBD;
+    color: #014a8e;
+    border-radius: 20px;
+    border: 0;
+}
+
+.mapa:hover {
+    background-color: #cfcfcf;
+    cursor: pointer;
+}
+
+/* Ícone de Mapa */
+
+.icon {
+    margin-left: 5px; 
+    color: #014a8e;
+}
+
+/* Input de Nível de Dificuldade */
+
+label {
+    font-size: 15px;
+}
+
+input[type="radio"] {
+    appearance: none;
+    height: 1.25em;
+    position: relative;
+    width: 1.25em;
+}
+
+input[type='radio']::after, input[type='radio']::before {
+    border-radius: 50%;
+    position: absolute;
+}
+
+input[type='radio']::after {
+    background-color: #000000;
+    content: '';
+    height: 50%;
+    left: 25%;
+    transform: scale(0);
+    transform-origin: center;
+    transition: transform 0.2s;
+    top: 25%;
+    width: 50%;
+}
+
+input[type='radio']::before {
+    border: 2px solid #000000;
+    box-sizing: border-box;
+    content: '';
+    height: 100%;
+    width: 100%;
+}
+
+input[type='radio']:checked::after {
+    transform: scale(1);
+    background-color: #014a8e;
+}
+
+/* Botões de Voltar e Salvar */
+
+.btns {
+    background-color: #003B73;
+    color: white;
+    width: 90px;
+    height: 25px;
+    border-radius: 5px;
+    border: none;
+}
+
+.btns:hover {
+    background-color: #014a8e;
+    cursor: pointer;
+}
+
+.voltar {
+    float: left;
+    margin-left: 24px;
+}
+
+.salvar {
+    float: right;
+}
+
+/* Mapas Salvos */
+
