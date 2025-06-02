@@ -1,6 +1,7 @@
 // 1. Importação de módulos necessários
 const express = require('express');
 const cors = require('cors'); // Para permitir requisições de diferentes origens, por exemplo, do Front
+const path = require('path');
 
 // 2. Inicialização do aplicativo Express
 const app = express();
@@ -9,8 +10,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Renderizando a pagina html
+
+const publicPath = path.join(__dirname, '..', 'frontend', 'public');
+app.use(express.static(publicPath));
+
+app.use('/images', express.static(path.join(publicPath, 'images')));
+
 // 4. Armazenamento de Dados (em memória por enquanto)
-let exercicios = []; // Array para guardar nossos exercícios
+let exercicios = [];
+
+
 let proximoId = 1; // Contador simples para gerar IDs únicos
 
 // 5. Definição das Rotas

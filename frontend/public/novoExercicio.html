@@ -1,98 +1,129 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="images/logo_edutech.png">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="images/logo_edutech.png" />
     <script src="https://kit.fontawesome.com/1dc5e8d3e7.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" typ="text/css" href="./style.css">
-
+    <link rel="stylesheet" type="text/css" href="./style.css" />
     <title>Novo Exercício</title>
 </head>
-
-<body>             
+<body>
     <div class="exercicio">
         <h2>Novo Exercício</h2>
 
         <div class="container-form-mapas">
-
             <div class="box-form-mapas form">
-                <form>
+                <form id="formExercicio">
                     <h3>Título</h3>
-                    <input type="text" placeholder="Digite um título" class="texto" required>
-                    <h3>Descrição</h3>
-                    <textarea rows="5" cols="50" placeholder="Descreva o exercício" class="texto" style="resize:none;" required></textarea>
+                    <input type="text" id="titulo" placeholder="Digite um título" class="texto" required />
 
-                    <h3>Selecionar Mapa</h3>
-                    <button type="button" class="mapa" onclick="mostraMapa()" id="selMapa">Selecionar <i class="fa-solid fa-map icon"></i></button>
-                    <label id="ok" style="color: #014a8e; display: none;">✔</label>
-                    <input type="checkbox" style="float: right; display: none" id="checkMapa" required>
-                    
-                    <h3>Resposta Correta</h3>
-                    <input type="text" class="texto" placeholder="Digite a resposta" required>
+                    <h3>Descrição</h3>
+                    <textarea
+                        id="descricao"
+                        rows="5"
+                        cols="50"
+                        placeholder="Descreva o exercício"
+                        class="texto"
+                        style="resize: none;"
+                        required
+                    ></textarea>
+
+                    <h3>
+                        SELECIONE O MAPA
+                        <button type="button" class="mapa" onclick="mostrarImagem()" id="selMapa">
+                            Selecionar <i class="fa-solid fa-map icon"></i>
+                        </button>
+                    </h3>
+                    <!-- Imagem e botão Salvar escondidos inicialmente -->
+                    <div id="imagemMapa" style="display: none; margin-top: 10px;">
+                        <img src="./images/mapa.jpeg" alt="Mapa Selecionado" style="max-width: 100%; border: 1px solid #ccc; margin-bottom: 10px;" />
+                        <button type="button" onclick="salvarMapa()" class="btn-salvar-mapa">Salvar Mapa</button>
+                    </div>
 
                     <h3>Nível de Dificuldade</h3>
-                    <input type="radio" name="dific" id="f" required>
-                    <label for="f">Fácil</label>
-                    <input type="radio" name="dific" id="m" required>
-                    <label for="m">Médio</label>
-                    <input type="radio" name="dific" id="d" required>
-                    <label for="d">Difícil</label> <br><br><br>
+                    <select id="nivelDificuldade" class="texto" required>
+                        <option value="" disabled selected>Selecione o nível</option>
+                        <option value="Fácil">Fácil</option>
+                        <option value="Médio">Médio</option>
+                        <option value="Avançado">Avançado</option>
+                    </select>
 
-                    <!-- Botões de voltar e salvar da tela -->
-                    <button class="voltar btns">Voltar</button>
-                    <button class="salvar btns">Salvar</button>
+                    <h3>Alternativas</h3>
+                    <input type="text" id="alt1" placeholder="Alternativa 1" class="texto" required />
+                    <input type="text" id="alt2" placeholder="Alternativa 2" class="texto" required />
+                    <input type="text" id="alt3" placeholder="Alternativa 3" class="texto" required />
+                    <input type="text" id="alt4" placeholder="Alternativa 4" class="texto" required />
+
+                    <br /><br />
+
+                    <button type="button" class="voltar btns" onclick="window.history.back()">Voltar</button>
+                    <button type="submit" class="salvar btns">Salvar</button>
                 </form>
             </div>
-            <div class="box-form-mapas container-mapas" id="mapa" style="display: none">
-                <h3>Mapas Salvos</h3>
-
-                <div class="container-imgs">
-
-                    <div class="box-img">
-                        <label> Mapa A </label>
-                        <img src="./images/mapaA.jpeg"/>
-                    </div>
-                    <div class="box-img">
-                        <label> Mapa B </label>
-                        <img src="./images/mapaA.jpeg"/>
-                    </div>
-                    <div class="box-img">
-                        <label> Mapa C </label>
-                        <img src="./images/mapaA.jpeg"/>
-                    </div>
-                    <div class="box-img">
-                        <label> Mapa D </label>
-                        <img src="./images/mapaA.jpeg"/>
-                    </div>
-
-
-                </div>
-
-                <div class="container-editar">
-                    <h4 style="margin: 20px 0 0 20px;">Configurar Mapa</h4>
-                    <!-- Mapa para editar -->
-                    <div class="editar-mapa">
-                        <label> Mapa A </label> <br>
-                        <img src="./images/mapaA-pontos.jpeg"/ class="img">
-                    </div>
-
-                    <!-- Botões para edição -->
-                    <div class="editar-btns">
-                        <button class="box-editar-btns"><i class="fa-solid fa-lightbulb editar-icon"></i> Dica</button>
-                        <button class="box-editar-btns"><i class="fa-regular fa-comment editar-icon"></i> Comentário</button>
-                        <button class="box-editar-btns" onclick="escondeMapa()">Salvar</button>
-                    </div>
-
-                </div>
-
-                <div></div>
-            </div>
-
         </div>
-        
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let mapaSelecionado = "Nenhum";
+
+        function mostrarImagem() {
+            document.getElementById('imagemMapa').style.display = 'block';
+        }
+
+        function salvarMapa() {
+            mapaSelecionado = "Mapa A"; // Aqui você pode ajustar para um valor dinâmico se quiser
+            alert("Mapa salvo: " + mapaSelecionado);
+            document.getElementById('imagemMapa').style.display = 'none';
+        }
+
+        document.getElementById('formExercicio').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const titulo = document.getElementById('titulo').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            const nivelDificuldade = document.getElementById('nivelDificuldade').value;
+            const alternativas = [
+                document.getElementById('alt1').value.trim(),
+                document.getElementById('alt2').value.trim(),
+                document.getElementById('alt3').value.trim(),
+                document.getElementById('alt4').value.trim()
+            ];
+
+            if (!titulo || !descricao || !nivelDificuldade || alternativas.some(a => a === "")) {
+                alert("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            const novoExercicio = {
+                titulo,
+                descricao,
+                mapaSelecionado,
+                nivelDificuldade,
+                alternativas
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/exercicios', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(novoExercicio)
+                });
+
+                if (response.ok) {
+                    alert("Exercício adicionado com sucesso!");
+                    window.location.reload(); // ou redirecione para outra página se preferir
+                } else {
+                    const erro = await response.json();
+                    alert("Erro ao adicionar: " + erro.mensagem);
+                }
+            } catch (err) {
+                alert("Erro de rede ou servidor.");
+                console.error(err);
+            }
+        });
+    </script>
 </body>
 </html>
