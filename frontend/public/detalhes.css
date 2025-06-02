@@ -67,6 +67,7 @@ button:hover {
     background-color: #ccc;
 }
 
+.close-btn,
 .excluir {
     background-color: #dc3545;
     border: none;
@@ -74,6 +75,7 @@ button:hover {
     cursor: pointer;
 }
 
+.close-btn:hover,
 .excluir:hover {
     background-color: #c82333;
 }
@@ -81,8 +83,4 @@ button:hover {
 ul {
     list-style: none;
     padding: 0;
-}
-
-.mapa {
-    width: 50%;
 }

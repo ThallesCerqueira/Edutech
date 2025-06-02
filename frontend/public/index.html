@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="images/logo_edutech.png">
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="detalhes.css">
-  <link rel="stylesheet" href="new.css">
+  <link rel="stylesheet" href="modal.css">
   <title>Edutech</title>
 </head>
 
@@ -148,27 +149,6 @@
     </div>
   </div>
 
-  <!-- MODAL DE VISUALIZAÇÃO DO EXERCÍCIO -->
-  <div id="modalVerExercicio" class="modal" style="display: none;">
-    <div class="modal-content">
-      <span class="close-button" onclick="fecharModalVerExercicio()">&times;</span>
-
-      <div class="exercicio">
-        <h2 id="verTitulo"></h2>
-        <p><strong>Descrição:</strong> <span id="verDescricao"></span></p>
-        <p><strong>Nível de Dificuldade:</strong> <span id="verNivel"></span></p>
-        <p><strong>Mapa:</strong> <span id="verMapa"></span></p>
-        <div id="verImagemMapa" style="margin-top: 10px;">
-          <img src="./images/mapa.jpeg" alt="Mapa do Exercício"
-            style="max-width: 100%; border: 1px solid #ccc; margin-bottom: 10px;" />
-        </div>
-        <p><strong>Alternativas:</strong></p>
-        <ul id="verAlternativas"></ul>
-        <button class="voltar btns" onclick="fecharModalVerExercicio()">Fechar</button>
-      </div>
-    </div>
-  </div>
-
 
   <script>
     // --- SEU SCRIPT EXISTENTE PARA LISTA E SIDEBAR (Mantido) ---
@@ -231,7 +211,7 @@
           detalhesDiv.innerHTML = `
             <h2>${exercicio.titulo || 'Título não disponível'}</h2>
             <p><strong>Descrição:</strong> ${exercicio.descricao || 'Descrição não disponível'}</p>
-              <img src="./images/mapaA-pontos.jpeg"> <p><strong>Nível:</strong> ${exercicio.nivelDificuldade || 'Nível não disponível'}</p>
+              <img style="width: 80%" src="./images/mapaA-pontos.jpeg"> <p><strong>Nível:</strong> ${exercicio.nivelDificuldade || 'Nível não disponível'}</p>
               <p><strong>Alternativas:</strong> ${alternativasTexto}</p>
           `;
           abrirDetalhes();
@@ -240,11 +220,13 @@
     }
 
     function abrirDetalhes() {
-      detalhes.classList.add('open');
+      const closeButton = document.querySelector('.close-btn');
+      closeButton.style.display = 'block'; // Exibe o botão de fechar
+      detalhes.style.display = 'block';
     }
 
     function fecharDetalhes() {
-      detalhes.classList.remove('open');
+      detalhes.style.display = 'none';
     }
 
     // ADICIONADO: Placeholder para a função editarExercicio
@@ -476,37 +458,6 @@
         console.error('Erro ao buscar exercício:', err);
         alert('Erro ao carregar exercício para edição.');
       }
-    }
-
-    const modalVer = document.getElementById('modalVerExercicio');
-
-    function abrirModalVerExercicioPorId(id) {
-      fetch(`http://localhost:3000/exercicios/${id}`)
-        .then(res => res.json())
-        .then(exercicio => {
-          document.getElementById('verTitulo').innerText = exercicio.titulo || 'Sem título';
-          document.getElementById('verDescricao').innerText = exercicio.descricao || 'Sem descrição';
-          document.getElementById('verNivel').innerText = exercicio.nivelDificuldade || 'Nível não informado';
-          document.getElementById('verMapa').innerText = exercicio.mapaSelecionado || 'Mapa não selecionado';
-
-          const ul = document.getElementById('verAlternativas');
-          ul.innerHTML = '';
-          (exercicio.alternativas || []).forEach((alt, i) => {
-            const li = document.createElement('li');
-            li.innerText = typeof alt === 'string' ? alt : alt.texto;
-            ul.appendChild(li);
-          });
-
-          modalVer.style.display = 'flex';
-        })
-        .catch(err => {
-          console.error('Erro ao buscar exercício:', err);
-          alert('Não foi possível carregar o exercício.');
-        });
-    }
-
-    function fecharModalVerExercicio() {
-      modalVer.style.display = 'none';
     }
   </script>
 </body>

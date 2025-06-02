@@ -15,6 +15,7 @@
 
 /* Conteúdo do modal */
 .modal-content {
+    position: relative;
     background-color: #ffffff;
     padding: 30px 40px;
     width: 800px;
