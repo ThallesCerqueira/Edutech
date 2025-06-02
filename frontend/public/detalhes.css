@@ -1,0 +1,88 @@
+h1 {
+    color: #333;
+    margin-top: 80px;
+}
+
+header{
+    margin-left: 220px;
+}
+
+.list-container {
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+.search-input {
+    width: 300px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.list {
+    max-width: 600px;
+    padding: 20px;
+}
+
+.list-item {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 50px;
+
+}
+
+.botoes {
+    display: flex;
+}
+
+.editar {
+    background-color: transparent;
+}
+
+.show {
+    width: 100%;
+    background-color: transparent;
+    text-align: start;
+    color: #333;
+}
+
+.show:hover,
+.editar:hover {
+    background-color: #ccc;
+}
+
+.excluir {
+    background-color: #dc3545;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.excluir:hover {
+    background-color: #c82333;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mapa {
+    width: 50%;
+}

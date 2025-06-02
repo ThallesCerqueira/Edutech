@@ -1,91 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EduTech</title>
-  <link rel="stylesheet" href="index.css" />
-  <script src="https://kit.fontawesome.com/1dc5e8d3e7.js" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="detalhes.css">
+  <link rel="stylesheet" href="new.css">
+  <title>Edutech</title>
 </head>
+
 <body>
-  <div class="content">
-
-    <h1>EXERCÍCIOS</h1>
-
-    <input type="text" id="campo-pesquisa" placeholder="Digite o título do exercício" />
-    <button id="btnAbrirModalNovoExercicio">Novo Exercício</button>
-    <button onclick="pesquisarExercicio()">Pesquisar 🔍</button>
-
-    <ul id="lista-exercicios"></ul>
-
-    <div id="sidebar">
-      <button class="close-btn" onclick="fecharSidebar()">×</button>
-      <div id="detalhes-exercicio"></div>
+  <navbar class="sidebar">
+    <div class="logo">
+      <img src="images/logo_edutech.png" alt="Edutech Logo" />
+    </div>
+  </navbar>
+  <header>
+    <h1>Lista de Exercícios</h1>
+  </header>
+  <main>
+    <div>
+      <div class="list-container">
+        <div class="search-container">
+          <input class="search-input" type="text" id="campo-pesquisa" placeholder="Digite o título do exercício" />
+          <button class="search-button" onclick="pesquisarExercicio()">Pesquisar 🔍</button>
+          <button class="new-button" id="btnAbrirModalNovoExercicio" onclick="pesquisarExercicio()">Novo
+            Exercício</button>
+        </div>
+      </div>
+      <ul class="list" id="lista-exercicios"></ul>
     </div>
 
+    <div id="detalhes">
+      <button class="close-btn" onclick="fecharDetalhes()" style="display: none;">×</button>
+      <div id="detalhes-exercicio"></div>
+    </div>
+  </main>
+
+  <!-- MODAL DE CRIAÇÃO -->
+  <div id="modalNovoExercicio" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-button" id="btnCloseModalNovoExercicio">&times;</span>
+
+      <div class="exercicio">
+        <div class="container-form-mapas">
+          <div class="box-form-mapas form">
+            <form id="formExercicioModal">
+              <h3>Título</h3>
+              <input type="text" id="tituloModal" placeholder="Digite um título" class="texto" required />
+
+              <h3>Descrição</h3>
+              <textarea id="descricaoModal" rows="5" cols="50" placeholder="Descreva o exercício" class="texto"
+                style="resize: none;" required></textarea>
+
+              <h3>
+                SELECIONE O MAPA
+                <button type="button" class="mapa" onclick="mostrarImagemModal()" id="selMapaModal">
+                  Selecionar <i class="fa-solid fa-map icon"></i>
+                </button>
+              </h3>
+              <div id="imagemMapaModal" style="display: none; margin-top: 10px;">
+                <img src="./images/mapaA-pontos.jpeg" alt="Mapa Selecionado"
+                  style="max-width: 100%; border: 1px solid #ccc; margin-bottom: 10px;" />
+                <button type="button" onclick="salvarMapaModal()" class="btn-salvar-mapa">Salvar Mapa</button>
+              </div>
+
+              <h3>Nível de Dificuldade</h3>
+              <select id="nivelDificuldadeModal" class="texto" required>
+                <option value="" disabled selected>Selecione o nível</option>
+                <option value="Fácil">Fácil</option>
+                <option value="Médio">Médio</option>
+                <option value="Avançado">Avançado</option>
+              </select>
+
+              <h3>Alternativas</h3>
+              <p style="font-size: 0.8em; color: #555;">(Preencha as alternativas abaixo. Para marcar a correta,
+                faremos um ajuste futuro)</p>
+              <input type="text" id="alt1Modal" placeholder="Alternativa 1" class="texto" required />
+              <input type="text" id="alt2Modal" placeholder="Alternativa 2" class="texto" required />
+              <input type="text" id="alt3Modal" placeholder="Alternativa 3" class="texto" required />
+              <input type="text" id="alt4Modal" placeholder="Alternativa 4" class="texto" required />
+
+              <br /><br />
+
+              <button type="button" class="voltar btns" onclick="fecharModalNovoExercicio()">Cancelar</button>
+              <button type="submit" class="salvar btns">Salvar Exercício</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div id="modalNovoExercicio" class="modal">
+  <!-- MODAL DE EDIÇÃO -->
+  <div id="modalEditarExercicio" class="modal" style="display: none;">
     <div class="modal-content">
-        <span class="close-button" id="btnCloseModalNovoExercicio">&times;</span>
+      <span class="close-button" onclick="fecharModalEditarExercicio()">&times;</span>
 
-        <div class="exercicio"> <h2>Novo Exercício</h2>
-            <div class="container-form-mapas"> <div class="box-form-mapas form">
-                <form id="formExercicioModal"> <h3>Título</h3>
-                    <input type="text" id="tituloModal" placeholder="Digite um título" class="texto" required />
+      <div class="exercicio">
+        <div class="container-form-mapas">
+          <div class="box-form-mapas form">
+            <form id="formEditarExercicio">
+              <input type="hidden" id="editarIdExercicio" />
 
-                    <h3>Descrição</h3>
-                    <textarea
-                        id="descricaoModal"
-                        rows="5"
-                        cols="50"
-                        placeholder="Descreva o exercício"
-                        class="texto"
-                        style="resize: none;"
-                        required
-                    ></textarea>
+              <h3>Título</h3>
+              <input type="text" id="editarTitulo" placeholder="Digite um título" class="texto" required />
 
-                    <h3>
-                        SELECIONE O MAPA
-                        <button type="button" class="mapa" onclick="mostrarImagemModal()" id="selMapaModal">
-                            Selecionar <i class="fa-solid fa-map icon"></i>
-                        </button>
-                    </h3>
-                    <div id="imagemMapaModal" style="display: none; margin-top: 10px;">
-                        <img src="./images/mapa.jpeg" alt="Mapa Selecionado" style="max-width: 100%; border: 1px solid #ccc; margin-bottom: 10px;" />
-                        <button type="button" onclick="salvarMapaModal()" class="btn-salvar-mapa">Salvar Mapa</button>
-                    </div>
+              <h3>Descrição</h3>
+              <textarea id="editarDescricao" rows="5" cols="50" placeholder="Descreva o exercício" class="texto"
+                style="resize: none;" required></textarea>
 
-                    <h3>Nível de Dificuldade</h3>
-                    <select id="nivelDificuldadeModal" class="texto" required>
-                        <option value="" disabled selected>Selecione o nível</option>
-                        <option value="Fácil">Fácil</option>
-                        <option value="Médio">Médio</option>
-                        <option value="Avançado">Avançado</option>
-                    </select>
+              <h3>
+                SELECIONE O MAPA
+                <button type="button" class="mapa" onclick="mostrarImagemModalEditar()">
+                  Selecionar <i class="fa-solid fa-map icon"></i>
+                </button>
+              </h3>
+              <div id="imagemMapaModalEditar" style="display: none; margin-top: 10px;">
+                <img src="./images/mapaA-pontos.jpeg" alt="Mapa Selecionado"
+                  style="max-width: 100%; border: 1px solid #ccc; margin-bottom: 10px;" />
+                <button type="button" onclick="salvarMapaModalEditar()" class="btn-salvar-mapa">Salvar Mapa</button>
+              </div>
 
-                    <h3>Alternativas</h3>
-                    <p style="font-size: 0.8em; color: #555;">(Preencha as alternativas abaixo. Para marcar a correta, faremos um ajuste futuro)</p>
-                    <input type="text" id="alt1Modal" placeholder="Alternativa 1" class="texto" required />
-                    <input type="text" id="alt2Modal" placeholder="Alternativa 2" class="texto" required />
-                    <input type="text" id="alt3Modal" placeholder="Alternativa 3" class="texto" required />
-                    <input type="text" id="alt4Modal" placeholder="Alternativa 4" class="texto" required />
+              <h3>Nível de Dificuldade</h3>
+              <select id="editarNivelDificuldade" class="texto" required>
+                <option value="" disabled selected>Selecione o nível</option>
+                <option value="Fácil">Fácil</option>
+                <option value="Médio">Médio</option>
+                <option value="Avançado">Avançado</option>
+              </select>
 
-                    <br /><br />
+              <h3>Alternativas</h3>
+              <input type="text" id="editarAlt1" placeholder="Alternativa 1" class="texto" required />
+              <input type="text" id="editarAlt2" placeholder="Alternativa 2" class="texto" required />
+              <input type="text" id="editarAlt3" placeholder="Alternativa 3" class="texto" required />
+              <input type="text" id="editarAlt4" placeholder="Alternativa 4" class="texto" required />
 
-                    <button type="button" class="voltar btns" onclick="fecharModalNovoExercicio()">Cancelar</button>
-                    <button type="submit" class="salvar btns">Salvar Exercício</button>
-                </form>
-            </div>
-            </div>
+              <br /><br />
+
+              <button type="button" class="voltar btns" onclick="fecharModalEditarExercicio()">Cancelar</button>
+              <button type="submit" class="salvar btns">Salvar Edição</button>
+            </form>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE VISUALIZAÇÃO DO EXERCÍCIO -->
+  <div id="modalVerExercicio" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-button" onclick="fecharModalVerExercicio()">&times;</span>
+
+      <div class="exercicio">
+        <h2 id="verTitulo"></h2>
+        <p><strong>Descrição:</strong> <span id="verDescricao"></span></p>
+        <p><strong>Nível de Dificuldade:</strong> <span id="verNivel"></span></p>
+        <p><strong>Mapa:</strong> <span id="verMapa"></span></p>
+        <div id="verImagemMapa" style="margin-top: 10px;">
+          <img src="./images/mapa.jpeg" alt="Mapa do Exercício"
+            style="max-width: 100%; border: 1px solid #ccc; margin-bottom: 10px;" />
         </div>
-</div>
+        <p><strong>Alternativas:</strong></p>
+        <ul id="verAlternativas"></ul>
+        <button class="voltar btns" onclick="fecharModalVerExercicio()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
 
   <script>
     // --- SEU SCRIPT EXISTENTE PARA LISTA E SIDEBAR (Mantido) ---
     const lista = document.getElementById('lista-exercicios');
-    const sidebar = document.getElementById('sidebar');
+    const detalhes = document.getElementById('detalhes');
     const detalhesDiv = document.getElementById('detalhes-exercicio');
 
     function carregarExercicios() {
@@ -100,12 +188,13 @@
       data.forEach(exercicio => {
         const item = document.createElement('li');
         item.innerHTML = `
-          <button onclick="verExercicio(${exercicio.id})">${exercicio.titulo}</button>
+          <button class="show" onclick="verExercicio(${exercicio.id})">${exercicio.titulo}</button>
           <div class="botoes">
-            <button onclick="editarExercicio(${exercicio.id})">🖊️</button>
-            <button onclick="excluirExercicio(${exercicio.id})">🗑️</button>
+            <button class="editar" onclick="editarExercicio(${exercicio.id})">🖊️</button>
+            <button class="excluir" onclick="excluirExercicio(${exercicio.id})">🗑️</button>
           </div>
         `;
+        item.classList.add('list-item');
         lista.appendChild(item);
       });
     }
@@ -136,33 +225,33 @@
         .then(res => res.json())
         .then(exercicio => {
           // Verifica se o exercício e as alternativas existem antes de tentar acessá-los
-          const alternativasTexto = exercicio.alternativas && Array.isArray(exercicio.alternativas) 
-                                    ? exercicio.alternativas.join(', ') 
-                                    : 'Nenhuma alternativa disponível';
+          const alternativasTexto = exercicio.alternativas && Array.isArray(exercicio.alternativas)
+            ? exercicio.alternativas.join(', ')
+            : 'Nenhuma alternativa disponível';
           detalhesDiv.innerHTML = `
             <h2>${exercicio.titulo || 'Título não disponível'}</h2>
             <p><strong>Descrição:</strong> ${exercicio.descricao || 'Descrição não disponível'}</p>
-             <img src="./images/mapa.jpeg"> <p><strong>Nível:</strong> ${exercicio.nivelDificuldade || 'Nível não disponível'}</p>
+              <img src="./images/mapaA-pontos.jpeg"> <p><strong>Nível:</strong> ${exercicio.nivelDificuldade || 'Nível não disponível'}</p>
               <p><strong>Alternativas:</strong> ${alternativasTexto}</p>
           `;
-          abrirSidebar();
+          abrirDetalhes();
         })
         .catch(err => console.error('Erro ao exibir exercício:', err));
     }
 
-    function abrirSidebar() {
-      sidebar.classList.add('open');
+    function abrirDetalhes() {
+      detalhes.classList.add('open');
     }
 
-    function fecharSidebar() {
-      sidebar.classList.remove('open');
+    function fecharDetalhes() {
+      detalhes.classList.remove('open');
     }
 
     // ADICIONADO: Placeholder para a função editarExercicio
     function editarExercicio(id) {
-        console.log('Função editarExercicio chamada com ID:', id);
-        alert('Funcionalidade "Editar Exercício" (ID: ' + id + ') ainda a ser implementada.');
-        // Exemplo: window.location.href = `alterarExercicio.html?id=${id}`;
+      console.log('Função editarExercicio chamada com ID:', id);
+      alert('Funcionalidade "Editar Exercício" (ID: ' + id + ') ainda a ser implementada.');
+      // Exemplo: window.location.href = `alterarExercicio.html?id=${id}`;
     }
 
     carregarExercicios(); // Carrega os exercícios ao iniciar a página
@@ -176,119 +265,250 @@
     let mapaSelecionadoModal = "Nenhum"; // Variável para o mapa selecionado no modal
 
     function mostrarImagemModal() {
-        const imgMapaDiv = document.getElementById('imagemMapaModal');
-        if (imgMapaDiv) imgMapaDiv.style.display = 'block';
+      const imgMapaDiv = document.getElementById('imagemMapaModal');
+      if (imgMapaDiv) imgMapaDiv.style.display = 'block';
     }
 
     function salvarMapaModal() {
-        mapaSelecionadoModal = "Mapa A"; // Você pode tornar isso dinâmico se tiver múltiplos mapas no modal
-        alert("Mapa salvo no modal: " + mapaSelecionadoModal);
-        const imgMapaDiv = document.getElementById('imagemMapaModal');
-        if (imgMapaDiv) imgMapaDiv.style.display = 'none';
+      mapaSelecionadoModal = "Mapa A"; // Você pode tornar isso dinâmico se tiver múltiplos mapas no modal
+      const imgMapaDiv = document.getElementById('imagemMapaModal');
+      if (imgMapaDiv) imgMapaDiv.style.display = 'none';
     }
 
     function abrirModalNovoExercicio() {
-        console.log('Tentando abrir modal...');
-        if(modalNovo) {
-            modalNovo.style.display = 'block';
-            console.log('Modal display set to block');
-        } else {
-            console.error('Elemento modalNovo não encontrado!');
-        }
+      console.log('Tentando abrir modal...');
+      if (modalNovo) {
+        modalNovo.style.display = 'flex';
+        console.log('Modal display set to block');
+      } else {
+        console.error('Elemento modalNovo não encontrado!');
+      }
     }
 
     function fecharModalNovoExercicio() {
-        if(modalNovo) modalNovo.style.display = 'none';
-        if(formExercicioModal) formExercicioModal.reset(); // Limpa o formulário ao fechar
-        mapaSelecionadoModal = "Nenhum"; // Reseta o mapa selecionado
-        const imgMapaDiv = document.getElementById('imagemMapaModal');
-        if (imgMapaDiv) imgMapaDiv.style.display = 'none'; // Esconde a seleção de imagem do mapa
+      if (modalNovo) modalNovo.style.display = 'none';
+      if (formExercicioModal) formExercicioModal.reset(); // Limpa o formulário ao fechar
+      mapaSelecionadoModal = "Nenhum"; // Reseta o mapa selecionado
+      const imgMapaDiv = document.getElementById('imagemMapaModal');
+      if (imgMapaDiv) imgMapaDiv.style.display = 'none'; // Esconde a seleção de imagem do mapa
     }
 
     // Event Listeners para o modal
-    if(btnAbrirModal) {
-        console.log('Adicionando listener para btnAbrirModal');
-        btnAbrirModal.addEventListener('click', abrirModalNovoExercicio);
+    if (btnAbrirModal) {
+      console.log('Adicionando listener para btnAbrirModal');
+      btnAbrirModal.addEventListener('click', abrirModalNovoExercicio);
     } else {
-        console.error('Botão btnAbrirModalNovoExercicio não encontrado!');
+      console.error('Botão btnAbrirModalNovoExercicio não encontrado!');
     }
 
-    if(btnFecharModal) {
-        btnFecharModal.addEventListener('click', fecharModalNovoExercicio);
+    if (btnFecharModal) {
+      btnFecharModal.addEventListener('click', fecharModalNovoExercicio);
     } else {
-        console.error('Botão btnCloseModalNovoExercicio não encontrado!');
+      console.error('Botão btnCloseModalNovoExercicio não encontrado!');
     }
 
     // Fechar o modal se clicar fora da área do conteúdo
-    window.addEventListener('click', function(event) {
-        if (event.target == modalNovo) {
-            fecharModalNovoExercicio();
-        }
+    window.addEventListener('click', function (event) {
+      if (event.target == modalNovo) {
+        fecharModalNovoExercicio();
+      }
     });
 
     // Lógica de submissão do formulário DENTRO DO MODAL
-    if(formExercicioModal) {
-        formExercicioModal.addEventListener('submit', async function(e) {
-            e.preventDefault();
+    if (formExercicioModal) {
+      formExercicioModal.addEventListener('submit', async function (e) {
+        e.preventDefault();
 
-            const titulo = document.getElementById('tituloModal').value.trim();
-            const descricao = document.getElementById('descricaoModal').value.trim();
-            const nivelDificuldade = document.getElementById('nivelDificuldadeModal').value;
-            // Coleta as alternativas como array de strings
-            const alternativas = [
-                document.getElementById('alt1Modal').value.trim(),
-                document.getElementById('alt2Modal').value.trim(),
-                document.getElementById('alt3Modal').value.trim(),
-                document.getElementById('alt4Modal').value.trim()
-            ].filter(alt => alt !== ""); // Garante que alternativas vazias não sejam enviadas (opcional)
+        const titulo = document.getElementById('tituloModal').value.trim();
+        const descricao = document.getElementById('descricaoModal').value.trim();
+        const nivelDificuldade = document.getElementById('nivelDificuldadeModal').value;
+        // Coleta as alternativas como array de strings
+        const alternativas = [
+          document.getElementById('alt1Modal').value.trim(),
+          document.getElementById('alt2Modal').value.trim(),
+          document.getElementById('alt3Modal').value.trim(),
+          document.getElementById('alt4Modal').value.trim()
+        ].filter(alt => alt !== ""); // Garante que alternativas vazias não sejam enviadas (opcional)
 
 
-            if (!titulo || !descricao || !nivelDificuldade || alternativas.length === 0) {
-                alert("Por favor, preencha todos os campos obrigatórios do modal (Título, Descrição, Nível e pelo menos uma Alternativa).");
-                return;
-            }
-            
-            // Nota: Seu backend atualmente aceita 'alternativas' como um array de strings.
-            // Se precisar enviar a informação de "correta", o formato seria um array de objetos:
-            // [{texto: "...", correta: true/false}, ...]
-            // Você precisaria de inputs (ex: radio buttons) no formulário para marcar a correta.
+        if (!titulo || !descricao || !nivelDificuldade || alternativas.length === 0) {
+          alert("Por favor, preencha todos os campos obrigatórios do modal (Título, Descrição, Nível e pelo menos uma Alternativa).");
+          return;
+        }
 
-            const novoExercicio = {
-                titulo,
-                descricao,
-                mapaSelecionado: mapaSelecionadoModal,
-                nivelDificuldade,
-                alternativas
-            };
+        // Nota: Seu backend atualmente aceita 'alternativas' como um array de strings.
+        // Se precisar enviar a informação de "correta", o formato seria um array de objetos:
+        // [{texto: "...", correta: true/false}, ...]
+        // Você precisaria de inputs (ex: radio buttons) no formulário para marcar a correta.
 
-            console.log("Enviando exercício:", novoExercicio);
+        const novoExercicio = {
+          titulo,
+          descricao,
+          mapaSelecionado: mapaSelecionadoModal,
+          nivelDificuldade,
+          alternativas
+        };
 
-            try {
-                const response = await fetch('http://localhost:3000/exercicios', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(novoExercicio)
-                });
+        console.log("Enviando exercício:", novoExercicio);
 
-                const respostaBackend = await response.json(); // Sempre tente ler a resposta
+        try {
+          const response = await fetch('http://localhost:3000/exercicios', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(novoExercicio)
+          });
 
-                if (response.ok) {
-                    alert(respostaBackend.mensagem || "Exercício adicionado com sucesso pelo modal!");
-                    fecharModalNovoExercicio();
-                    carregarExercicios(); // Recarrega a lista na página principal
-                } else {
-                    alert("Erro ao adicionar (modal): " + (respostaBackend.mensagem || "Erro desconhecido do servidor."));
-                }
-            } catch (err) {
-                alert("Erro de rede ou servidor (modal). Verifique o console.");
-                console.error("Erro no fetch POST:",err);
-            }
-        });
+          const respostaBackend = await response.json(); // Sempre tente ler a resposta
+
+          if (response.ok) {
+            alert(respostaBackend.mensagem || "Exercício adicionado com sucesso pelo modal!");
+            fecharModalNovoExercicio();
+            carregarExercicios(); // Recarrega a lista na página principal
+          } else {
+            alert("Erro ao adicionar (modal): " + (respostaBackend.mensagem || "Erro desconhecido do servidor."));
+          }
+        } catch (err) {
+          alert("Erro de rede ou servidor (modal). Verifique o console.");
+          console.error("Erro no fetch POST:", err);
+        }
+      });
     } else {
-        console.error('Formulário formExercicioModal não encontrado!');
+      console.error('Formulário formExercicioModal não encontrado!');
+    }
+
+
+
+    const modalEditar = document.getElementById('modalEditarExercicio');
+    const formEditarExercicio = document.getElementById('formEditarExercicio');
+    let mapaSelecionadoEditar = "";
+
+    function mostrarImagemModalEditar() {
+      document.getElementById('imagemMapaModalEditar').style.display = 'block';
+    }
+
+    function salvarMapaModalEditar() {
+      mapaSelecionadoEditar = "Mapa A";
+      alert("Mapa salvo para edição: " + mapaSelecionadoEditar);
+      document.getElementById('imagemMapaModalEditar').style.display = 'none';
+    }
+
+    function abrirModalEditarExercicio(exercicio) {
+      document.getElementById('editarIdExercicio').value = exercicio.id;
+      document.getElementById('editarTitulo').value = exercicio.titulo;
+      document.getElementById('editarDescricao').value = exercicio.descricao;
+      document.getElementById('editarNivelDificuldade').value = exercicio.nivelDificuldade;
+      mapaSelecionadoEditar = exercicio.mapaSelecionado;
+
+      const alts = exercicio.alternativas || [];
+      document.getElementById('editarAlt1').value = alts[0] || "";
+      document.getElementById('editarAlt2').value = alts[1] || "";
+      document.getElementById('editarAlt3').value = alts[2] || "";
+      document.getElementById('editarAlt4').value = alts[3] || "";
+
+      modalEditar.style.display = 'flex';
+    }
+
+    function fecharModalEditarExercicio() {
+      modalEditar.style.display = 'none';
+      formEditarExercicio.reset();
+      mapaSelecionadoEditar = "";
+      document.getElementById('imagemMapaModalEditar').style.display = 'none';
+    }
+
+    formEditarExercicio.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const id = document.getElementById('editarIdExercicio').value;
+      const titulo = document.getElementById('editarTitulo').value.trim();
+      const descricao = document.getElementById('editarDescricao').value.trim();
+      const nivelDificuldade = document.getElementById('editarNivelDificuldade').value;
+
+      const alternativas = [
+        document.getElementById('editarAlt1').value.trim(),
+        document.getElementById('editarAlt2').value.trim(),
+        document.getElementById('editarAlt3').value.trim(),
+        document.getElementById('editarAlt4').value.trim()
+      ].filter(alt => alt !== "");
+
+      const atualizado = {
+        titulo,
+        descricao,
+        mapaSelecionado: mapaSelecionadoEditar,
+        nivelDificuldade,
+        alternativas
+      };
+
+      try {
+        const response = await fetch(`http://localhost:3000/exercicios/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(atualizado)
+        });
+
+        const resultado = await response.json();
+        if (response.ok) {
+          alert(resultado.mensagem || 'Exercício atualizado com sucesso.');
+          fecharModalEditarExercicio();
+          carregarExercicios();
+        } else {
+          alert('Erro ao atualizar: ' + (resultado.mensagem || 'Erro desconhecido.'));
+        }
+      } catch (err) {
+        console.error('Erro ao atualizar exercício:', err);
+        alert('Erro ao enviar requisição de atualização.');
+      }
+    });
+
+    async function editarExercicio(id) {
+      try {
+        const response = await fetch(`http://localhost:3000/exercicios/${id}`);
+        const exercicio = await response.json();
+        if (response.ok) {
+          abrirModalEditarExercicio(exercicio);
+        } else {
+          alert('Exercício não encontrado para edição.');
+        }
+      } catch (err) {
+        console.error('Erro ao buscar exercício:', err);
+        alert('Erro ao carregar exercício para edição.');
+      }
+    }
+
+    const modalVer = document.getElementById('modalVerExercicio');
+
+    function abrirModalVerExercicioPorId(id) {
+      fetch(`http://localhost:3000/exercicios/${id}`)
+        .then(res => res.json())
+        .then(exercicio => {
+          document.getElementById('verTitulo').innerText = exercicio.titulo || 'Sem título';
+          document.getElementById('verDescricao').innerText = exercicio.descricao || 'Sem descrição';
+          document.getElementById('verNivel').innerText = exercicio.nivelDificuldade || 'Nível não informado';
+          document.getElementById('verMapa').innerText = exercicio.mapaSelecionado || 'Mapa não selecionado';
+
+          const ul = document.getElementById('verAlternativas');
+          ul.innerHTML = '';
+          (exercicio.alternativas || []).forEach((alt, i) => {
+            const li = document.createElement('li');
+            li.innerText = typeof alt === 'string' ? alt : alt.texto;
+            ul.appendChild(li);
+          });
+
+          modalVer.style.display = 'flex';
+        })
+        .catch(err => {
+          console.error('Erro ao buscar exercício:', err);
+          alert('Não foi possível carregar o exercício.');
+        });
+    }
+
+    function fecharModalVerExercicio() {
+      modalVer.style.display = 'none';
     }
   </script>
 </body>
+
 </html>
