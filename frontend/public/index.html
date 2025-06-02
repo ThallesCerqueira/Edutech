@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EduTech</title>
   <link rel="stylesheet" href="index.css" />
+  <script src="https://kit.fontawesome.com/1dc5e8d3e7.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="content">
@@ -12,12 +13,11 @@
     <h1>EXERCÍCIOS</h1>
 
     <input type="text" id="campo-pesquisa" placeholder="Digite o título do exercício" />
-    <button onclick="window.location.href='novoExercicio.html'">Novo Exercício</button>
+    <button id="btnAbrirModalNovoExercicio">Novo Exercício</button>
     <button onclick="pesquisarExercicio()">Pesquisar 🔍</button>
 
     <ul id="lista-exercicios"></ul>
 
-    <!-- Sidebar lateral -->
     <div id="sidebar">
       <button class="close-btn" onclick="fecharSidebar()">×</button>
       <div id="detalhes-exercicio"></div>
@@ -25,7 +25,65 @@
 
   </div>
 
+  <div id="modalNovoExercicio" class="modal">
+    <div class="modal-content">
+        <span class="close-button" id="btnCloseModalNovoExercicio">&times;</span>
+
+        <div class="exercicio"> <h2>Novo Exercício</h2>
+            <div class="container-form-mapas"> <div class="box-form-mapas form">
+                <form id="formExercicioModal"> <h3>Título</h3>
+                    <input type="text" id="tituloModal" placeholder="Digite um título" class="texto" required />
+
+                    <h3>Descrição</h3>
+                    <textarea
+                        id="descricaoModal"
+                        rows="5"
+                        cols="50"
+                        placeholder="Descreva o exercício"
+                        class="texto"
+                        style="resize: none;"
+                        required
+                    ></textarea>
+
+                    <h3>
+                        SELECIONE O MAPA
+                        <button type="button" class="mapa" onclick="mostrarImagemModal()" id="selMapaModal">
+                            Selecionar <i class="fa-solid fa-map icon"></i>
+                        </button>
+                    </h3>
+                    <div id="imagemMapaModal" style="display: none; margin-top: 10px;">
+                        <img src="./images/mapa.jpeg" alt="Mapa Selecionado" style="max-width: 100%; border: 1px solid #ccc; margin-bottom: 10px;" />
+                        <button type="button" onclick="salvarMapaModal()" class="btn-salvar-mapa">Salvar Mapa</button>
+                    </div>
+
+                    <h3>Nível de Dificuldade</h3>
+                    <select id="nivelDificuldadeModal" class="texto" required>
+                        <option value="" disabled selected>Selecione o nível</option>
+                        <option value="Fácil">Fácil</option>
+                        <option value="Médio">Médio</option>
+                        <option value="Avançado">Avançado</option>
+                    </select>
+
+                    <h3>Alternativas</h3>
+                    <p style="font-size: 0.8em; color: #555;">(Preencha as alternativas abaixo. Para marcar a correta, faremos um ajuste futuro)</p>
+                    <input type="text" id="alt1Modal" placeholder="Alternativa 1" class="texto" required />
+                    <input type="text" id="alt2Modal" placeholder="Alternativa 2" class="texto" required />
+                    <input type="text" id="alt3Modal" placeholder="Alternativa 3" class="texto" required />
+                    <input type="text" id="alt4Modal" placeholder="Alternativa 4" class="texto" required />
+
+                    <br /><br />
+
+                    <button type="button" class="voltar btns" onclick="fecharModalNovoExercicio()">Cancelar</button>
+                    <button type="submit" class="salvar btns">Salvar Exercício</button>
+                </form>
+            </div>
+            </div>
+        </div>
+        </div>
+</div>
+
   <script>
+    // --- SEU SCRIPT EXISTENTE PARA LISTA E SIDEBAR (Mantido) ---
     const lista = document.getElementById('lista-exercicios');
     const sidebar = document.getElementById('sidebar');
     const detalhesDiv = document.getElementById('detalhes-exercicio');
@@ -66,8 +124,8 @@
     function excluirExercicio(id) {
       fetch(`http://localhost:3000/exercicios/${id}`, { method: 'DELETE' })
         .then(res => res.json())
-        .then(() => {
-          alert('Exercício excluído!');
+        .then((resposta) => { // Adicionado parâmetro para a resposta
+          alert(resposta.mensagem || 'Exercício excluído!'); // Usa a mensagem do backend
           carregarExercicios();
         })
         .catch(err => console.error('Erro ao excluir:', err));
@@ -77,12 +135,15 @@
       fetch(`http://localhost:3000/exercicios/${id}`)
         .then(res => res.json())
         .then(exercicio => {
+          // Verifica se o exercício e as alternativas existem antes de tentar acessá-los
+          const alternativasTexto = exercicio.alternativas && Array.isArray(exercicio.alternativas) 
+                                    ? exercicio.alternativas.join(', ') 
+                                    : 'Nenhuma alternativa disponível';
           detalhesDiv.innerHTML = `
-            <h2>${exercicio.titulo}</h2>
-            <p><strong>Descrição:</strong> ${exercicio.descricao}</p>
-             <img src="./images/mapa.jpeg">
-              <p><strong>Nível:</strong> ${exercicio.nivelDificuldade}</p>
-              <p><strong>Alternativas:</strong> ${exercicio.alternativas.join(', ')}</p>
+            <h2>${exercicio.titulo || 'Título não disponível'}</h2>
+            <p><strong>Descrição:</strong> ${exercicio.descricao || 'Descrição não disponível'}</p>
+             <img src="./images/mapa.jpeg"> <p><strong>Nível:</strong> ${exercicio.nivelDificuldade || 'Nível não disponível'}</p>
+              <p><strong>Alternativas:</strong> ${alternativasTexto}</p>
           `;
           abrirSidebar();
         })
@@ -97,7 +158,137 @@
       sidebar.classList.remove('open');
     }
 
-    carregarExercicios();
+    // ADICIONADO: Placeholder para a função editarExercicio
+    function editarExercicio(id) {
+        console.log('Função editarExercicio chamada com ID:', id);
+        alert('Funcionalidade "Editar Exercício" (ID: ' + id + ') ainda a ser implementada.');
+        // Exemplo: window.location.href = `alterarExercicio.html?id=${id}`;
+    }
+
+    carregarExercicios(); // Carrega os exercícios ao iniciar a página
+
+    // --- NOVO CÓDIGO PARA A LÓGICA DO MODAL (Integrado aqui) ---
+    const modalNovo = document.getElementById('modalNovoExercicio');
+    const btnAbrirModal = document.getElementById('btnAbrirModalNovoExercicio');
+    const btnFecharModal = document.getElementById('btnCloseModalNovoExercicio'); // Botão 'X' do modal
+    const formExercicioModal = document.getElementById('formExercicioModal'); // Formulário dentro do modal
+
+    let mapaSelecionadoModal = "Nenhum"; // Variável para o mapa selecionado no modal
+
+    function mostrarImagemModal() {
+        const imgMapaDiv = document.getElementById('imagemMapaModal');
+        if (imgMapaDiv) imgMapaDiv.style.display = 'block';
+    }
+
+    function salvarMapaModal() {
+        mapaSelecionadoModal = "Mapa A"; // Você pode tornar isso dinâmico se tiver múltiplos mapas no modal
+        alert("Mapa salvo no modal: " + mapaSelecionadoModal);
+        const imgMapaDiv = document.getElementById('imagemMapaModal');
+        if (imgMapaDiv) imgMapaDiv.style.display = 'none';
+    }
+
+    function abrirModalNovoExercicio() {
+        console.log('Tentando abrir modal...');
+        if(modalNovo) {
+            modalNovo.style.display = 'block';
+            console.log('Modal display set to block');
+        } else {
+            console.error('Elemento modalNovo não encontrado!');
+        }
+    }
+
+    function fecharModalNovoExercicio() {
+        if(modalNovo) modalNovo.style.display = 'none';
+        if(formExercicioModal) formExercicioModal.reset(); // Limpa o formulário ao fechar
+        mapaSelecionadoModal = "Nenhum"; // Reseta o mapa selecionado
+        const imgMapaDiv = document.getElementById('imagemMapaModal');
+        if (imgMapaDiv) imgMapaDiv.style.display = 'none'; // Esconde a seleção de imagem do mapa
+    }
+
+    // Event Listeners para o modal
+    if(btnAbrirModal) {
+        console.log('Adicionando listener para btnAbrirModal');
+        btnAbrirModal.addEventListener('click', abrirModalNovoExercicio);
+    } else {
+        console.error('Botão btnAbrirModalNovoExercicio não encontrado!');
+    }
+
+    if(btnFecharModal) {
+        btnFecharModal.addEventListener('click', fecharModalNovoExercicio);
+    } else {
+        console.error('Botão btnCloseModalNovoExercicio não encontrado!');
+    }
+
+    // Fechar o modal se clicar fora da área do conteúdo
+    window.addEventListener('click', function(event) {
+        if (event.target == modalNovo) {
+            fecharModalNovoExercicio();
+        }
+    });
+
+    // Lógica de submissão do formulário DENTRO DO MODAL
+    if(formExercicioModal) {
+        formExercicioModal.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const titulo = document.getElementById('tituloModal').value.trim();
+            const descricao = document.getElementById('descricaoModal').value.trim();
+            const nivelDificuldade = document.getElementById('nivelDificuldadeModal').value;
+            // Coleta as alternativas como array de strings
+            const alternativas = [
+                document.getElementById('alt1Modal').value.trim(),
+                document.getElementById('alt2Modal').value.trim(),
+                document.getElementById('alt3Modal').value.trim(),
+                document.getElementById('alt4Modal').value.trim()
+            ].filter(alt => alt !== ""); // Garante que alternativas vazias não sejam enviadas (opcional)
+
+
+            if (!titulo || !descricao || !nivelDificuldade || alternativas.length === 0) {
+                alert("Por favor, preencha todos os campos obrigatórios do modal (Título, Descrição, Nível e pelo menos uma Alternativa).");
+                return;
+            }
+            
+            // Nota: Seu backend atualmente aceita 'alternativas' como um array de strings.
+            // Se precisar enviar a informação de "correta", o formato seria um array de objetos:
+            // [{texto: "...", correta: true/false}, ...]
+            // Você precisaria de inputs (ex: radio buttons) no formulário para marcar a correta.
+
+            const novoExercicio = {
+                titulo,
+                descricao,
+                mapaSelecionado: mapaSelecionadoModal,
+                nivelDificuldade,
+                alternativas
+            };
+
+            console.log("Enviando exercício:", novoExercicio);
+
+            try {
+                const response = await fetch('http://localhost:3000/exercicios', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(novoExercicio)
+                });
+
+                const respostaBackend = await response.json(); // Sempre tente ler a resposta
+
+                if (response.ok) {
+                    alert(respostaBackend.mensagem || "Exercício adicionado com sucesso pelo modal!");
+                    fecharModalNovoExercicio();
+                    carregarExercicios(); // Recarrega a lista na página principal
+                } else {
+                    alert("Erro ao adicionar (modal): " + (respostaBackend.mensagem || "Erro desconhecido do servidor."));
+                }
+            } catch (err) {
+                alert("Erro de rede ou servidor (modal). Verifique o console.");
+                console.error("Erro no fetch POST:",err);
+            }
+        });
+    } else {
+        console.error('Formulário formExercicioModal não encontrado!');
+    }
   </script>
 </body>
 </html>

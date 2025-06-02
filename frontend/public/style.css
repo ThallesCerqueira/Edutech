@@ -1,243 +1,154 @@
+.modal {
+  display: none; /* Escondido por padrão */
+  position: fixed; 
+  z-index: 1000; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.6); 
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%; /* Ajuste a largura conforme o conteúdo */
+  max-width: 800px; /* Largura máxima */
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+}
+
+/* Estilos adaptados para o conteúdo dentro do modal */
+.modal-content .exercicio {
+  margin: 0; 
+  padding: 0;
+  font-size: 16px; 
+}
+
+.modal-content .exercicio h2 {
+  font-size: 24px; 
+  margin: 10px 0 15px 0;
+  /* Removido margin-left: 40px para centralizar melhor no modal se necessário */
+}
+
+.modal-content .box-form-mapas.form { /* Aplica-se ao form dentro do modal */
+  width: 100%; 
+  margin-left: 0;
+  padding: 15px; 
+  box-sizing: border-box; 
+  /* Removido display: inline-block e background-color se o .modal-content já tiver fundo */
+  /* border: none; Se não quiser a borda do .form original dentro do modal */
+}
+
+.modal-content .container-form-mapas { /* Container do form e mapa (se houver) no modal */
+  display: block; 
+  /* Removido padding se .modal-content .box-form-mapas.form já tiver padding */
+}
+
+.modal-content #imagemMapaModal img { /* Imagem do mapa único no modal novoExercicio */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%; /* Garante que a imagem não ultrapasse o contêiner */
+  height: auto;    /* Mantém a proporção */
+  border: 1px solid #ccc; 
+  margin-bottom: 10px;
+}
+
+.modal-content .btn-salvar-mapa { /* Botão Salvar Mapa no modal novoExercicio */
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 10px auto 0 auto;
+}
+.modal-content .btn-salvar-mapa:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos Gerais (aplicam-se fora e dentro do modal, a menos que sobrescritos acima) */
 .exercicio {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px; /* Tamanho padrão fora do modal */
 }
 
-h2 {
-    font-size: 35px;
-    margin: 40px 0 15px 40px;
+h2 { /* Título principal das páginas como alterarExercicio.html */
+  font-size: 35px;
+  margin: 40px 0 15px 40px;
 }
 
-/* Formulário de novo exercício */
-
-.form {
-    width: 30%;
-    padding: 1px 54px 56px 35px;
-    border: 1.5px solid #eeeeee;
-    border-radius: 10px;
-    background-color: #f6f6f6;
-}
-
-/* Mapas Salvos */
-
-.container-mapas {
-    width: 40%;
-    padding: 1px 35px 56px 35px;
-    /* border: 1px solid blue; */
-}
-
-/* Formulário e Mapas Salvos */
-
+/* Estilos para o layout original de duas colunas (ex: alterarExercicio.html) */
 .container-form-mapas { 
-    padding: 0 0 10px 0;
-    /* border: 1px solid orange; */
+  padding: 0 0 10px 0;
+  /* Considerar usar Flexbox ou Grid para o layout de duas colunas se for complexo */
 }
 
-.box-form-mapas {
-    margin-left: 80px;
-    padding: 1px 54px 36px 35px;
-    background-color: #f6f6f6;
-    border: 1.5px solid #eeeeee;
-    border-radius: 10px;
-    display: inline-block;
+.box-form-mapas { /* Contêiner para o formulário ou para a seção de mapas no layout de duas colunas */
+  margin-left: 80px;
+  padding: 1px 54px 36px 35px;
+  background-color: #f6f6f6;
+  border: 1.5px solid #eeeeee;
+  border-radius: 10px;
+  display: inline-block; /* Para layout lado a lado */
+  vertical-align: top; /* Alinha os boxes no topo se tiverem alturas diferentes */
+  box-sizing: border-box;
 }
 
+.box-form-mapas.form { /* Formulário no layout de duas colunas */
+  width: calc(50% - 80px); /* Exemplo de cálculo de largura, ajuste conforme necessário */
+  /* Ou use flexbox no .container-form-mapas para distribuir o espaço */
+}
+
+.box-form-mapas.container-mapas { /* Seção de mapas no layout de duas colunas */
+  width: calc(50% - 80px); /* Exemplo */
+}
+
+
+/* Estilos para a lista de imagens de mapas (ex: alterarExercicio.html) */
 .container-imgs {
-    margin: 30px 0 0 20px;
-    padding-left: 6px;
-    width: 555px;
-    height: 200px;
-    overflow-y: scroll; /* Rolagem vertical */
-    border: 1.5px solid #014a8e;
-    border-radius: 10px;
-    border-right: 0;
+  margin: 30px 0 0 20px;
+  padding-left: 6px;
+  /* width: 555px; Removido largura fixa para ser mais responsivo */
+  max-width: 100%;
+  height: 200px;
+  overflow-y: scroll; 
+  border: 1.5px solid #014a8e;
+  border-radius: 10px;
+  border-right: 0; /* Pode não ser necessário se a borda for uniforme */
 }
 
-.box-img {
-    width: 28.4%;
-    padding: 10px 10px 10px 10px;
-	display: inline-block;
-    cursor: pointer;
-    /* border: 1px solid red; */
+.box-img { /* Container de cada imagem de mapa na lista */
+  width: calc(33.33% - 20px); /* Para 3 colunas com algum espaçamento, ajuste */
+  padding: 10px;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center; /* Para centralizar a label e a imagem */
+  box-sizing: border-box;
 }
 
 .box-img:hover {
-    background-color: #ededed;
+  background-color: #ededed;
 }
 
-div img {
-    margin-left: auto;
-    margin-right: auto;
-    padding: auto;
-    padding-top: 10px;
-    max-width:180px;
-    max-height:100px;
-    width: auto;
-    height: auto;
-    display: block;
-    /* border: 1px solid blue; */
-}
-
-.container-editar {
-    margin: 20px 0 0 20px;
-    border: 1.5px solid #014a8e;
-    border-radius: 10px;
-}
-
-.editar-mapa {
-    margin: 20px 50px 0 50px;
-    /* border: 1px solid red; */
-}
-
-.img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: auto;
-    height: auto;
-    max-width:400px;
-    max-height:300px;
-}
-
-.editar-btns {
-    margin: 6% 0% ;
-    width: auto;
-    display: block;
-    /* border: 1px solid red; */
-}
-
-.box-editar-btns {
-    margin-left: 7.5%; 
-    width: 125px;
-    height: 25px;
-    background-color: #003B73;
-    color: white;
-    border-radius: 5px;
-    border: none;  
-}
-
-.editar-icon {
-    margin-right: 5px; 
-    color: #eeeeee    ;
-}
-
-.box-editar-btns:hover {
-    background-color: #014a8e;
-    cursor: pointer;
-}
-
-/* Formulário de novo exercício */
-/* continuação */
-
-h3 {
-    margin: 30px 0 10px 0;
-}
-
-.texto {
-    width: 100%;
-    padding: 8px 8px 8px 16px;
-    background-color:#BDBDBD;
-    border-radius: 20px;
-    border: 0;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.texto:focus {
-    outline: 0;
-}
-
-.texto:hover {
-    background-color: #cfcfcf;
-}
-
-/* Botão para acessar mapas */
-
-.mapa {
-    width: 150px;
-    padding: 8px 0px 8px 0px;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color:#BDBDBD;
-    color: #014a8e;
-    border-radius: 20px;
-    border: 0;
-}
-
-.mapa:hover {
-    background-color: #cfcfcf;
-    cursor: pointer;
-}
-
-/* Ícone de Mapa */
-
-.icon {
-    margin-left: 5px; 
-    color: #014a8e;
-}
-
-/* Input de Nível de Dificuldade */
-
-label {
-    font-size: 15px;
-}
-
-input[type="radio"] {
-    appearance: none;
-    height: 1.25em;
-    position: relative;
-    width: 1.25em;
-}
-
-input[type='radio']::after, input[type='radio']::before {
-    border-radius: 50%;
-    position: absolute;
-}
-
-input[type='radio']::after {
-    background-color: #000000;
-    content: '';
-    height: 50%;
-    left: 25%;
-    transform: scale(0);
-    transform-origin: center;
-    transition: transform 0.2s;
-    top: 25%;
-    width: 50%;
-}
-
-input[type='radio']::before {
-    border: 2px solid #000000;
-    box-sizing: border-box;
-    content: '';
-    height: 100%;
-    width: 100%;
-}
-
-input[type='radio']:checked::after {
-    transform: scale(1);
-    background-color: #014a8e;
-}
-
-/* Botões de Voltar e Salvar */
-
-.btns {
-    background-color: #003B73;
-    color: white;
-    width: 90px;
-    height: 25px;
-    border-radius: 5px;
-    border: none;
-}
-
-.btns:hover {
-    background-color: #014a8e;
-    cursor: pointer;
-}
-
-.voltar {
-    float: left;
-    margin-left: 24px;
-}
-
-.salvar {
-    float: right;
-}
+/* CORRIGIDO: Seletor mais específico para as imagens dentro de .box-
