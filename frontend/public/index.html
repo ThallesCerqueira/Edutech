@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
@@ -8,27 +8,33 @@
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="detalhes.css">
   <link rel="stylesheet" href="modal.css">
+  <script src="https://kit.fontawesome.com/1dc5e8d3e7.js" crossorigin="anonymous"></script>
   <title>Edutech</title>
 </head>
 
 <body>
   <navbar class="sidebar">
     <div class="logo">
-      <img src="images/logo_edutech.png" alt="Edutech Logo" />
+      <img src="images/nome_logo_edutech.png" alt="Edutech Logo" />
+    </div>
+    <div class="container-menu-btns">
+      <button class="box-menu-btn"><i class="fa-solid fa-map-location-dot"></i></button> <br>
+      <button class="box-menu-btn"><i class="fa-solid fa-file-pen"></i></button> <br>
+      <button class="box-menu-btn"><i class="fa-solid fa-list-ul"></i></button> <br>
+      <button class="box-menu-btn"><i class="fa-solid fa-chart-simple"></i></button>
     </div>
   </navbar>
-  <header>
-    <h1>Lista de Exercícios</h1>
-  </header>
+
   <main>
-    <div>
-      <div class="list-container">
+    <div class="main-container">
+      <h1>Exercícios</h1>
+      <!-- <div class="list-container"> -->
         <div class="search-container">
           <input class="search-input" type="text" id="campo-pesquisa" placeholder="Digite o título do exercício" />
-          <button class="search-button" onclick="pesquisarExercicio()">Pesquisar 🔍</button>
+          <button class="search-button" onclick="pesquisarExercicio()">Pesquisar <i class="fa-solid fa-magnifying-glass" style="margin-left: 5px;"></i></button>
           <button class="new-button" id="btnAbrirModalNovoExercicio" onclick="pesquisarExercicio()">Novo
-            Exercício</button>
-        </div>
+            Exercício <i class="fa-solid fa-plus" style="margin-left: 5px;"></i></button>
+        <!-- </div> -->
       </div>
       <ul class="list" id="lista-exercicios"></ul>
     </div>
@@ -45,8 +51,11 @@
       <span class="close-button" id="btnCloseModalNovoExercicio">&times;</span>
 
       <div class="exercicio">
+
         <div class="container-form-mapas">
+
           <div class="box-form-mapas form">
+            <h2 style="color: #333;">Novo Exercício</h2>
             <form id="formExercicioModal">
               <h3>Título</h3>
               <input type="text" id="tituloModal" placeholder="Digite um título" class="texto" required />
@@ -98,7 +107,6 @@
   <div id="modalEditarExercicio" class="modal" style="display: none;">
     <div class="modal-content">
       <span class="close-button" onclick="fecharModalEditarExercicio()">&times;</span>
-
       <div class="exercicio">
         <div class="container-form-mapas">
           <div class="box-form-mapas form">
@@ -170,8 +178,8 @@
         item.innerHTML = `
           <button class="show" onclick="verExercicio(${exercicio.id})">${exercicio.titulo}</button>
           <div class="botoes">
-            <button class="editar" onclick="editarExercicio(${exercicio.id})">🖊️</button>
-            <button class="excluir" onclick="excluirExercicio(${exercicio.id})">🗑️</button>
+            <button class="editar" onclick="editarExercicio(${exercicio.id})"> <i class="fa-solid fa-pen" style="color: #222222;"></i></button>
+            <button class="excluir" onclick="excluirExercicio(${exercicio.id})"> <i class="fa-solid fa-trash-can" style="color: #222222;"></i></button>
           </div>
         `;
         item.classList.add('list-item');
