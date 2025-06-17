@@ -1,14 +1,14 @@
 :root {
     --primary-color: #007bff;
     --secondary-color: #2ecc71;
-    --background-color: #f5f5f5;
+    --background-color: #F2F2F2;
     --text-color: #222222;
     --font-size-base: 16px;
     --spacing-base: 8px;
 }
 
 main {
-    margin-left: 220px;
+    margin: 0 50px 0 120px;
 }
 
 body {
@@ -23,9 +23,9 @@ body {
     position: fixed;
     left: 0;
     top: 0;
-    width: 95px;
+    width: 70px;
     height: 100vh;
-    background: #007bff;
+    background: #4990E2;
     color: #fff;
     display: flex;
     flex-direction: column;
