@@ -20,6 +20,7 @@ app.use('/images', express.static(path.join(publicPath, 'images')));
 
 // 5. Definição das Rotas
 
+// ROTAS LISTA DE MAPAS
 app.post('/mapas', async (req, res) => {
 
   const { titulo, dica, descricao, caminho} = req.body;
@@ -131,6 +132,7 @@ app.delete('/mapas/:id', async (req, res) => {
   }
 });
 
+// ROTAS DE EXERCÍCIOS
 app.post('/exercicios', async (req, res) => {
   const { titulo, enunciado, dificuldade, id_mapa, alternativas } = req.body;
 
@@ -268,6 +270,290 @@ app.delete('/exercicios/:id', async (req, res) => {
         console.error('Erro ao deletar o exercício:', err.message);
         res.status(500).json({ mensagem: 'Erro interno do servidor.' });
     }
+});
+
+// ROTAS LISTA DE EXERCÍCIOS
+app.post('/lista-exercicios', async (req, res) => {
+ const {titulo, descricao, exercicios } = req.body;
+
+ // Validação simples
+ if (!titulo || !descricao || !exercicios || exercicios.length === 0) {
+   return res.status(400).json({ mensagem: 'Título, descrição e exercícios são obrigatórios.' });
+ }
+
+  const client = await pool.connect();
+ try {
+    await client.query('BEGIN');
+    const queryLista = 'INSERT INTO lista (titulo, descricao) VALUES ($1, $2) RETURNING id;';
+    const valuesLista = [titulo, descricao];
+    const resultLista = await client.query(queryLista, valuesLista);
+    const novaListaId = resultLista.rows[0].id;
+
+    const queryExercicioLista = 'INSERT INTO lista_exercicio (id_lista, id_exercicio) VALUES ($1, $2);';
+    for (const exercicio of exercicios) {
+      const valuesExercicio = [novaListaId, exercicio.id];
+      await client.query(queryExercicioLista, valuesExercicio);
+    }
+    await client.query('COMMIT');
+    res.status(201).json({ mensagem: 'Lista de exercícios criada com sucesso.', id: novaListaId });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Erro ao criar a lista de exercícios:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  } finally {
+    client.release();
+  }
+} );
+
+app.get('/lista-exercicios', async (req, res) => {
+  try {
+    const query = `SELECT lista.id, lista.titulo, lista.descricao, COUNT(le.id_exercicio) AS total_exercicios
+                   FROM lista
+                   LEFT JOIN lista_exercicio le ON lista.id = le.id_lista
+                    GROUP BY lista.id, lista.titulo, lista.descricao
+                    ORDER BY lista.id ASC;`;
+
+    const result = await pool.query(query);
+    res.status(200).json(result.rows);
+
+  } catch (err) {
+    console.error('Erro ao buscar as listas de exercícios:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
+
+app.get('/lista-exercicios/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Busca a lista pelo id
+    const listaQuery = `
+      SELECT id, titulo, descricao
+      FROM lista
+      WHERE id = $1;
+    `;
+    const listaResult = await pool.query(listaQuery, [id]);
+
+    if (listaResult.rows.length === 0) {
+      return res.status(404).json({ mensagem: 'Lista de exercícios não encontrada.' });
+    }
+
+    const lista = listaResult.rows[0];
+
+    // Busca os exercícios associados à lista
+    const exerciciosQuery = `
+      SELECT exercicio.id, exercicio.titulo, exercicio.enunciado, exercicio.dificuldade
+      FROM exercicio
+      INNER JOIN lista_exercicio le ON exercicio.id = le.id_exercicio
+      WHERE le.id_lista = $1
+      ORDER BY exercicio.id ASC;
+    `;
+    const exerciciosResult = await pool.query(exerciciosQuery, [id]);
+    lista.exercicios = exerciciosResult.rows;
+
+    res.status(200).json(lista);
+  } catch (err) {
+    console.error('Erro ao buscar a lista de exercícios:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
+
+app.put('/lista-exercicios/:id', async (req, res) => {
+  const { id } = req.params;
+  const { titulo, descricao, exercicios } = req.body;
+
+  if (!titulo || !descricao || !exercicios || exercicios.length === 0) {
+    return res.status(400).json({ mensagem: 'Título, descrição e exercícios são obrigatórios.' });
+  }
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const updateListaQuery = 'UPDATE lista SET titulo = $1, descricao = $2 WHERE id = $3;';
+    await client.query(updateListaQuery, [titulo, descricao, id]);
+
+    const deleteExerciciosQuery = 'DELETE FROM lista_exercicio WHERE id_lista = $1;';
+    await client.query(deleteExerciciosQuery, [id]);
+
+    const insertExercicioQuery = 'INSERT INTO lista_exercicio (id_lista, id_exercicio) VALUES ($1, $2);';
+    for (const exercicio of exercicios) {
+      await client.query(insertExercicioQuery, [id, exercicio.id]);
+    }
+    await client.query('COMMIT');
+    res.status(200).json({ mensagem: 'Lista de exercícios atualizada com sucesso.' });
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Erro ao atualizar a lista de exercícios:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  } finally {
+    client.release();
+  }
+
+});
+
+app.delete('/lista-exercicios/:id', async (req, res) => {
+  const { id } = req.params;
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');  
+    const deleteListaQuery = 'DELETE FROM lista WHERE id = $1;';
+    const result = await client.query(deleteListaQuery, [id]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ mensagem: 'Lista de exercícios não encontrada para exclusão.' });
+    }
+    const deleteExerciciosQuery = 'DELETE FROM lista_exercicio WHERE id_lista = $1;';
+    await client.query(deleteExerciciosQuery, [id]);
+    await client.query('COMMIT');
+    res.status(200).json({ mensagem: 'Lista de exercícios deletada com sucesso.' });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Erro ao deletar a lista de exercícios:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+  finally {
+    client.release();
+  }
+});
+
+// ROTAS DE USUÁRIOS
+app.post('/usuarios', async (req, res) => {
+  const { nome, email, senha, cargo } = req.body;
+
+  if (!nome || !email || !senha || !cargo) {
+    return res.status(400).json({ mensagem: 'Todos os campos (nome, email, senha, cargo) são obrigatórios.' });
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const query = `
+      INSERT INTO usuario (nome, email, senha, cargo) 
+      VALUES ($1, $2, $3, $4) 
+      RETURNING id, nome, email, cargo;
+    `;
+
+    const values = [nome, email, senha, cargo];
+    const result = await client.query(query, values);
+
+    await client.query('COMMIT');
+    res.status(201).json({
+      mensagem: 'Usuário criado com sucesso!',
+      usuarioId: result.rows[0].id
+    });
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    if (err.code === '23505') {
+      return res.status(409).json({ mensagem: 'Este email já está cadastrado.' });
+    }
+    console.error('Erro ao criar usuário:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+
+  } finally {
+    client.release();
+  }
+});
+
+app.get('/usuarios', async (req, res) => {
+  try {
+    const query = 'SELECT id, nome, email, cargo FROM usuario ORDER BY id ASC;';
+    const result = await pool.query(query);
+    res.status(200).json(result.rows);
+
+  } catch (err) {
+    console.error('Erro ao buscar usuários:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+
+});
+
+app.get('/usuarios/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = 'SELECT id, nome, email, cargo FROM usuario WHERE id = $1;';
+    const result = await pool.query(query, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
+    }
+    res.status(200).json(result.rows[0]);
+
+  } catch (err) {
+    console.error('Erro ao buscar usuário:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+
+});
+
+app.put('/usuarios/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nome, email, senha, cargo } = req.body;
+
+  if (!nome || !email || !senha || !cargo) {
+    return res.status(400).json({ mensagem: 'Todos os campos (nome, email, senha, cargo) são obrigatórios.' });
+  }
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+    const query = `
+      UPDATE usuario 
+      SET nome = $1, email = $2, senha = $3, cargo = $4
+      WHERE id = $5;
+    `;
+    const values = [nome, email, senha, cargo, id];
+    const result = await client.query(query, values);
+
+    if (result.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ mensagem: 'Usuário não encontrado para atualização.' });
+    }
+
+    await client.query('COMMIT');
+    res.status(200).json({ mensagem: 'Usuário atualizado com sucesso.' });
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    if (err.code === '23505') {
+      return res.status(409).json({ mensagem: 'Este email já está cadastrado.' });
+    }
+    console.error('Erro ao atualizar usuário:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+
+  } finally {
+    client.release();
+  }
+});
+
+app.delete('/usuarios/:id', async (req, res) => {
+  const { id } = req.params;
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+    const query = 'DELETE FROM usuario WHERE id = $1;';
+    const result = await client.query(query, [id]);
+    if (result.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ mensagem: 'Usuário não encontrado para exclusão.' });
+    }
+    await client.query('COMMIT');
+    res.status(200).json({ mensagem: 'Usuário deletado com sucesso.' });
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Erro ao deletar usuário:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+
+  } finally {
+    client.release();
+  }
 });
 
 // 6. Porta e Inicialização do Servidor
