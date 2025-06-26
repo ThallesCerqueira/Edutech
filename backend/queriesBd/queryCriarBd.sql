@@ -63,3 +63,13 @@ CREATE TABLE alternativa (
     correta BOOLEAN NOT NULL,
     descricao TEXT NOT NULL
 );
+
+--
+CREATE TABLE resposta (
+    id SERIAL PRIMARY KEY,
+    id_usuario INTEGER NOT NULL REFERENCES usuario(id),
+    id_exercicio INTEGER NOT NULL REFERENCES exercicio(id),
+    id_alternativa_escolhida INTEGER NOT NULL REFERENCES alternativa(id),
+    foi_correta BOOLEAN NOT NULL,
+    data_resolucao TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

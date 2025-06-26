@@ -48,6 +48,7 @@ app.post('/mapas', async (req, res) => {
   }
 });
 
+
 app.get('/mapas', async (req, res) => {
   try {
     const query = 'SELECT id, titulo FROM mapa ORDER BY id ASC;';
@@ -555,6 +556,180 @@ app.delete('/usuarios/:id', async (req, res) => {
     client.release();
   }
 });
+
+
+//ROTAS ADICIONAR RESPOSTAS
+
+//PARTE DO GABRIEL
+
+//LISTA TODAS AS RESPOSTAS DE TODOS OS USUARIOS
+app.get('/respostas', async (req, res) => {
+  try {
+    const query = `
+      SELECT r.id, r.id_usuario, u.nome AS nome_usuario,
+             r.id_exercicio, e.titulo AS titulo_exercicio,
+             r.id_alternativa_escolhida, a.descricao AS descricao_alternativa,
+             r.foi_correta, r.data_resolucao
+      FROM resposta r
+      JOIN usuario u ON r.id_usuario = u.id
+      JOIN exercicio e ON r.id_exercicio = e.id
+      JOIN alternativa a ON r.id_alternativa_escolhida = a.id
+      ORDER BY r.data_resolucao DESC;
+    `;
+    const result = await pool.query(query);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Erro ao buscar respostas:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
+
+// TODAS AS RESPOSTAS DE UMA LISTA, PODE SER UTIL PARA VISUALIZAR DESEMPENHO, TRATAR ISSO DEPOIS
+app.get('/respostas/lista/:id', async (req, res) => {
+  const listaId = req.params.id;
+
+  try {
+    const query = `
+      SELECT r.id, r.id_usuario, u.nome AS nome_usuario,
+             r.id_exercicio, e.titulo AS titulo_exercicio,
+             r.id_alternativa_escolhida, a.descricao AS descricao_alternativa,
+             r.foi_correta, r.data_resolucao
+      FROM resposta r
+      JOIN usuario u ON r.id_usuario = u.id
+      JOIN exercicio e ON r.id_exercicio = e.id
+      JOIN alternativa a ON r.id_alternativa_escolhida = a.id
+      JOIN lista_exercicio le ON e.id = le.id_exercicio
+      WHERE le.id_lista = $1
+      ORDER BY r.data_resolucao DESC;
+    `;
+
+    const result = await pool.query(query, [listaId]);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Erro ao buscar respostas da lista:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
+
+
+//LISTA A RESPOSTA DE UM EXERCICIO ESPECIFICO
+app.get('/respostas/exercicio/:id', async (req, res) => {
+  const exercicioId = req.params.id;
+
+  try {
+    const query = `
+      SELECT r.id, r.id_usuario, u.nome AS nome_usuario,
+             r.id_alternativa_escolhida, a.descricao AS descricao_alternativa,
+             r.foi_correta, r.data_resolucao
+      FROM resposta r
+      JOIN usuario u ON r.id_usuario = u.id
+      JOIN alternativa a ON r.id_alternativa_escolhida = a.id
+      WHERE r.id_exercicio = $1
+      ORDER BY r.data_resolucao DESC;
+    `;
+
+    const result = await pool.query(query, [exercicioId]);
+    res.status(200).json(result.rows);
+
+  } catch (err) {
+    console.error('Erro ao buscar respostas do exercício:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
+
+//EDITAR A RESPOSTA 
+app.put('/respostas/:id', async (req, res) => {
+  const respostaId = req.params.id;
+  const { id_usuario, id_exercicio, id_alternativa_escolhida, foi_correta } = req.body;
+
+  if (!id_usuario || !id_exercicio || !id_alternativa_escolhida || typeof foi_correta !== 'boolean') {
+    return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.' });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const query = `
+      UPDATE resposta
+      SET id_usuario = $1,
+          id_exercicio = $2,
+          id_alternativa_escolhida = $3,
+          foi_correta = $4,
+          data_resolucao = CURRENT_TIMESTAMP
+      WHERE id = $5;
+    `;
+    const values = [id_usuario, id_exercicio, id_alternativa_escolhida, foi_correta, respostaId];
+    const result = await client.query(query, values);
+
+    if (result.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ mensagem: 'Resposta não encontrada para atualização.' });
+    }
+
+    await client.query('COMMIT');
+    res.status(200).json({ mensagem: 'Resposta atualizada com sucesso.' });
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Erro ao atualizar resposta:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  } finally {
+    client.release();
+  }
+});
+
+//DELETA RESPOSTA 
+app.delete('/respostas/:id', async (req, res) => {
+  const respostaId = req.params.id;
+
+  try {
+    const result = await pool.query('DELETE FROM resposta WHERE id = $1;', [respostaId]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ mensagem: 'Resposta não encontrada para exclusão.' });
+    }
+
+    res.status(200).json({ mensagem: 'Resposta deletada com sucesso.' });
+
+  } catch (err) {
+    console.error('Erro ao deletar resposta:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
+
+//ROTA ADICIONAR RESPOSTA 
+app.post('/respostas/adicionar', async (req, res) => {
+  const { id_usuario, id_exercicio, id_alternativa_escolhida, foi_correta } = req.body;
+
+  if (!id_usuario || !id_exercicio || !id_alternativa_escolhida || typeof foi_correta !== 'boolean') {
+    return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.' });
+  }
+
+  try {
+    const query = `
+      INSERT INTO resposta (id_usuario, id_exercicio, id_alternativa_escolhida, foi_correta)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id;
+    `;
+
+    const values = [id_usuario, id_exercicio, id_alternativa_escolhida, foi_correta];
+    const result = await pool.query(query, values);
+
+    res.status(201).json({
+      mensagem: 'Resposta adicionada com sucesso.',
+      id: result.rows[0].id
+    });
+
+  } catch (err) {
+    console.error('Erro ao adicionar resposta:', err.message);
+    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+  }
+});
+
+
+
+
 
 // 6. Porta e Inicialização do Servidor
 const PORT = 3000; // Definição da porta

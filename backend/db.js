@@ -6,7 +6,7 @@ const pool = new Pool({
   user: 'postgres',       // Ex: 'postgres'
   host: 'localhost',
   database: 'edutech_db',     // O nome do banco que você criou
-  password: 'cerqueira',
+  password: '123',
   port: 5432,
 });
 
