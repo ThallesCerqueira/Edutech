@@ -562,29 +562,7 @@ app.delete('/usuarios/:id', async (req, res) => {
 
 //PARTE DO GABRIEL
 
-//LISTA TODAS AS RESPOSTAS DE TODOS OS USUARIOS
-app.get('/respostas', async (req, res) => {
-  try {
-    const query = `
-      SELECT r.id, r.id_usuario, u.nome AS nome_usuario,
-             r.id_exercicio, e.titulo AS titulo_exercicio,
-             r.id_alternativa_escolhida, a.descricao AS descricao_alternativa,
-             r.foi_correta, r.data_resolucao
-      FROM resposta r
-      JOIN usuario u ON r.id_usuario = u.id
-      JOIN exercicio e ON r.id_exercicio = e.id
-      JOIN alternativa a ON r.id_alternativa_escolhida = a.id
-      ORDER BY r.data_resolucao DESC;
-    `;
-    const result = await pool.query(query);
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error('Erro ao buscar respostas:', err.message);
-    res.status(500).json({ mensagem: 'Erro interno do servidor.' });
-  }
-});
-
-// TODAS AS RESPOSTAS DE UMA LISTA, PODE SER UTIL PARA VISUALIZAR DESEMPENHO, TRATAR ISSO DEPOIS
+//TODAS AS RESPOSTAS DE UMA LISTA - MELHORAR A DISPOSIÇÃO DOS DADOS
 app.get('/respostas/lista/:id', async (req, res) => {
   const listaId = req.params.id;
 
