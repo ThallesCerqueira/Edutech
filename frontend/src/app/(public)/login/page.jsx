@@ -35,8 +35,6 @@ export default function LoginPage() {
                 return;
             }
 
-            console.log('Tentando login com:', { email: formData.email });
-
             // Login
             const response = await fetch('http://localhost:3001/usuarios/login', {
                 method: 'POST',
@@ -48,8 +46,6 @@ export default function LoginPage() {
                     senha: formData.senha
                 })
             });
-
-            console.log('Response status:', response.status);
 
             if (!response.ok) {
                 let errorMessage = 'Erro ao fazer login';
@@ -64,7 +60,6 @@ export default function LoginPage() {
             }
 
             const data = await response.json();
-            console.log('Login bem-sucedido:', data);
 
             if (!data.token || !data.usuario) {
                 throw new Error('Dados de login inválidos recebidos do servidor');
@@ -72,11 +67,6 @@ export default function LoginPage() {
 
             // Usar o contexto de autenticação para fazer login
             login(data.usuario, data.token);
-
-            // Aguardar um pouco para garantir que o localStorage foi atualizado
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            console.log('Redirecionando para página principal...');
 
             // Redirecionar para a página principal
             router.push('/');

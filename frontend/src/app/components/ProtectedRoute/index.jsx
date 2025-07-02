@@ -8,14 +8,7 @@ const ProtectedRoute = ({ children }) => {
     const router = useRouter();
 
     useEffect(() => {
-        console.log('ProtectedRoute: Estado atual', {
-            loading,
-            isAuthenticated: isAuthenticated(),
-            usuario: !!usuario
-        });
-
         if (!loading && !isAuthenticated()) {
-            console.log('ProtectedRoute: Usuário não autenticado, redirecionando para login...');
             router.push('/login');
         }
     }, [loading, isAuthenticated, router, usuario]);

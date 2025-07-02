@@ -31,16 +31,10 @@ export const AuthProvider = ({ children }) => {
             const tokenSalvo = localStorage.getItem('token');
             const usuarioSalvo = localStorage.getItem('usuario');
 
-            console.log('AuthContext: Verificando dados salvos...', {
-                temToken: !!tokenSalvo,
-                temUsuario: !!usuarioSalvo
-            });
-
             if (tokenSalvo && usuarioSalvo) {
                 const usuarioData = JSON.parse(usuarioSalvo);
                 setToken(tokenSalvo);
                 setUsuario(usuarioData);
-                console.log('AuthContext: Dados carregados com sucesso', usuarioData);
             }
         } catch (error) {
             console.error('Erro ao carregar dados do usuário:', error);
@@ -54,11 +48,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         setLoading(false);
-    }, [mounted]);
-
-    const login = (dadosUsuario, tokenUsuario) => {
-        console.log('AuthContext: Fazendo login...', { usuario: dadosUsuario, token: !!tokenUsuario });
-
+    }, [mounted]); const login = (dadosUsuario, tokenUsuario) => {
         setUsuario(dadosUsuario);
         setToken(tokenUsuario);
 
@@ -66,7 +56,6 @@ export const AuthProvider = ({ children }) => {
             try {
                 localStorage.setItem('token', tokenUsuario);
                 localStorage.setItem('usuario', JSON.stringify(dadosUsuario));
-                console.log('AuthContext: Dados salvos no localStorage');
             } catch (error) {
                 console.error('Erro ao salvar no localStorage:', error);
             }
@@ -74,7 +63,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
-        console.log('AuthContext: Fazendo logout...');
         setUsuario(null);
         setToken(null);
         if (typeof window !== 'undefined') {

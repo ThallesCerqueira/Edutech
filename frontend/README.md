@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EduTech - Sistema Educacional
 
-## Getting Started
+Sistema web moderno para gestão de mapas educacionais, exercícios e listas, desenvolvido com Next.js e Node.js.
 
-First, run the development server:
+## Pré-requisitos
 
+Antes de começar, certifique-se de ter instalado:
+- [Node.js](https://nodejs.org/) (versão 18 ou superior)
+- [npm](https://www.npmjs.com/) (geralmente vem com o Node.js)
+
+## Como rodar o projeto
+
+### 1. Preparação inicial
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone o repositório (se ainda não fez)
+git clone https://github.com/ThallesCerqueira/Edutech.git
+cd Edutech
+
+# Mude para a branch frontend
+git checkout frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configurar o Backend
+```bash
+# Navegue para a pasta do backend
+cd backend
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+# Instale as dependências
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Inicie o servidor backend (porta 3001)
+npm start
+```
+**Mantenha este terminal aberto - o backend precisa estar rodando!**
 
-## Learn More
+### 3. Configurar o Frontend (em outro terminal)
+```bash
+# Navegue para a pasta do frontend
+cd frontend
 
-To learn more about Next.js, take a look at the following resources:
+# Instale as dependências
+npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Inicie o servidor de desenvolvimento (porta 3000)
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Acessar o sistema
+- Abra seu navegador em: **http://localhost:3000**
+- Para fazer login use:
+  - **Email:** `admin@edutech.com`
+  - **Senha:** `123456`
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Guia 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Estrutura dos arquivos de estilo
+
+O projeto usa **CSS Modules** - cada componente tem seu próprio arquivo `.module.css`. Isso significa que os estilos ficam organizados e não interferem entre si.
+
+```
+frontend/src/app/
+├── globals.css                    # Estilos globais (cores, fontes)
+├── components/
+│   ├── Sidebar/
+│   │   └── index.module.css      # Estilo da barra lateral
+│   ├── Cards/
+│   │   ├── UniversalCard/
+│   │   │   └── index.module.css  # Estilo dos cartões
+│   │   └── UniversalList/
+│   │       └── index.module.css  # Estilo das listas
+│   ├── Pages/
+│   │   ├── MapasPage/
+│   │   │   └── index.module.css  # Página de mapas
+│   │   ├── ExerciciosPage/
+│   │   │   └── index.module.css  # Página de exercícios
+│   │   └── ListasPage/
+│   │       └── index.module.css  # Página de listas
+│   └── Modal/
+│       └── index.module.css      # Janelas popup
+└── (public)/login/
+    └── page.module.css           # Página de login
+```
+
+
+### Mudando cores principais
+**Arquivo:** `frontend/src/app/globals.css`
+
+```css
+/* Encontre essas variáveis e modifique as cores */
+:root {
+  --cor-primaria: #2c3e50;     /* Azul escuro */
+  --cor-secundaria: #3498db;   /* Azul claro */
+  --cor-sucesso: #27ae60;      /* Verde */
+  --cor-erro: #e74c3c;         /* Vermelho */
+  --cor-fundo: #f8f9fa;        /* Cinza claro */
+}
+```
+
+## Scripts disponíveis
+
+```bash
+npm run dev         # Servidor de desenvolvimento
+npm run build       # Gerar versão de produção
+npm run start       # Executar versão de produção
+npm run lint        # Verificar código
+```
+
+## Tecnologias utilizadas
+
+- **Frontend:** Next.js 15, React, CSS Modules
+- **Backend:** Node.js, Express, SQLite
+- **Autenticação:** JWT + bcrypt
+- **Ícones:** Font Awesome
