@@ -1,0 +1,41 @@
+/* SearchBar Universal */
+.searchContainer {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: center;
+}
+
+.searchContainer input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #ffffff;
+    transition: 0.15s ease-in-out;
+}
+
+.searchContainer input:focus {
+    outline: none;
+    border-color: #2c3e50;
+}
+
+.novoButton {
+    background-color: #2c3e50;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.15s ease-in-out;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.novoButton:hover {
+    background-color: #1a252f;
+}

@@ -1,0 +1,214 @@
+/* Página de Login */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.loginBox {
+    display: flex;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 900px;
+    min-height: 500px;
+}
+
+/* Seção Esquerda - Logo */
+.leftSection {
+    flex: 1;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    color: white;
+    position: relative;
+}
+
+.leftSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/logo.png') no-repeat center center;
+    background-size: contain;
+    opacity: 0.05;
+}
+
+.logo {
+    margin-bottom: 40px;
+    z-index: 2;
+    position: relative;
+}
+
+.logo img {
+    max-width: 250px;
+    height: auto;
+    filter: brightness(0) invert(1);
+}
+
+.demoInfo {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    z-index: 2;
+    position: relative;
+}
+
+.demoInfo h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ecf0f1;
+}
+
+.demoInfo p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #bdc3c7;
+}
+
+.demoInfo small {
+    display: block;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #95a5a6;
+    font-style: italic;
+}
+
+/* Seção Direita - Formulário */
+.rightSection {
+    flex: 1;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.rightSection h1 {
+    margin-bottom: 32px;
+    color: #2c3e50;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.form {
+    width: 100%;
+}
+
+.inputGroup {
+    margin-bottom: 24px;
+}
+
+.inputGroup label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #ecf0f1;
+    border-radius: 12px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.inputGroup input:focus {
+    outline: none;
+    border-color: #667eea;
+    background-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+}
+
+.submitButton {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 8px;
+}
+
+.submitButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.erro {
+    background-color: #fee;
+    color: #c53030;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #feb2b2;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .loginBox {
+        flex-direction: column;
+        max-width: 400px;
+        min-height: auto;
+    }
+
+    .leftSection {
+        padding: 40px 20px;
+        min-height: 300px;
+    }
+
+    .rightSection {
+        padding: 40px 20px;
+    }
+
+    .logo img {
+        max-width: 200px;
+    }
+
+    .rightSection h1 {
+        font-size: 24px;
+    }
+
+    .demoInfo {
+        padding: 16px;
+    }
+}

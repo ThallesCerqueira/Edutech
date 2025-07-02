@@ -1,0 +1,435 @@
+/* Estilos base compartilhados por todos os modais */
+.modal {
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: right;
+}
+
+.modalContent {
+    position: relative;
+    background-color: #f8f9fa;
+    padding: 16px;
+    width: 100%;
+    height: 100vh;
+    max-width: 600px;
+    overflow-y: auto;
+    animation: fadeIn 0.2s ease-out;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+@keyframes fadeIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.closeButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 18px;
+    color: #6c757d;
+    cursor: pointer;
+    transition: 0.15s ease-in-out;
+    background: none;
+    border: none;
+    padding: 4px;
+}
+
+.closeButton:hover {
+    color: #212529;
+    background-color: #e9ecef;
+    border-radius: 6px;
+}
+
+.modalContent h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #212529;
+    font-weight: 600;
+}
+
+.modalContent input[type="text"],
+.modalContent input[type="number"],
+.modalContent textarea,
+.modalContent select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    color: #212529;
+}
+
+.modalContent input:focus,
+.modalContent textarea:focus,
+.modalContent select:focus {
+    outline: none;
+    border-color: #2c3e50;
+    box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+}
+
+.modalContent label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    color: #6c757d;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.modalContent .btns {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: 0.15s ease-in-out;
+    font-weight: 500;
+}
+
+.salvar {
+    background-color: #2c3e50;
+    color: #ffffff;
+}
+
+.salvar:hover {
+    background-color: #1a252f;
+}
+
+.voltar,
+.cancelar {
+    background-color: #ffffff;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+
+.voltar:hover,
+.cancelar:hover {
+    background-color: #e9ecef;
+}
+
+.excluir {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.excluir:hover {
+    background-color: #721c24;
+}
+
+.botoesContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #dee2e6;
+}
+
+.formGroup {
+    margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+    .modal {
+        padding: 8px;
+    }
+
+    .modalContent {
+        max-width: 100%;
+        max-height: 95vh;
+        padding: 12px;
+    }
+}
+
+.errorMessage {
+    color: #721c24;
+    margin-bottom: 12px;
+    font-size: 14px;
+    padding: 8px;
+    background-color: #f8d7da;
+    border-radius: 6px;
+    border-left: 3px solid #dc3545;
+}
+
+.successMessage {
+    color: #155724;
+    margin-bottom: 12px;
+    font-size: 14px;
+    padding: 8px;
+    background-color: #d4edda;
+    border-radius: 6px;
+    border-left: 3px solid #28a745;
+}
+
+.infoValue {
+    background-color: #ffffff;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #212529;
+}
+
+/* Estilos de botões para modais */
+.buttonGroup {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #dee2e6;
+}
+
+.button {
+    flex: 1;
+    padding: 8px 16px;
+    background-color: #2196f3;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+    font-weight: 500;
+}
+
+.button:hover {
+    background-color: #1976d2;
+}
+
+.button.secondary {
+    background-color: #6c757d;
+}
+
+.button.secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Variações de tamanho do modal */
+.modalSmall {
+    max-width: 400px;
+}
+
+.modalLarge {
+    max-width: 800px;
+}
+
+/* Corpo do modal */
+.modalBody {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Estilos para campos com erro */
+.inputError {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1) !important;
+}
+
+.fieldError {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+
+.fieldHelp {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Estilos para checkbox e radio */
+.checkboxLabel {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-weight: normal !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+
+.checkboxLabel input[type="checkbox"] {
+    width: auto !important;
+    margin: 0 !important;
+}
+
+.radioGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.radioLabel {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: normal !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+
+.radioLabel input[type="radio"] {
+    width: auto !important;
+    margin: 0 !important;
+}
+
+/* Botão de warning */
+.warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.warning:hover {
+    background-color: #e0a800;
+}
+
+/* Estilos para campo de imagem */
+.imageField {
+    margin-bottom: 1rem;
+}
+
+.imageInputLabel {
+    display: block;
+    cursor: pointer;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    transition: 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.imageInputLabel:hover {
+    border-color: #2c3e50;
+    background-color: #e9ecef;
+}
+
+.imagePreview {
+    position: relative;
+    max-width: 300px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.previewImage {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.imageOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.3s ease;
+    gap: 8px;
+}
+
+.imagePreview:hover .imageOverlay {
+    opacity: 1;
+}
+
+.imagePlaceholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+.imagePlaceholder i {
+    font-size: 3rem;
+    color: #dee2e6;
+}
+
+.imagePlaceholder span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.removeImageButton {
+    margin-top: 8px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.3s ease;
+}
+
+.removeImageButton:hover {
+    background-color: #c82333;
+}
+
+.imageSizeInfo {
+    margin-top: 8px;
+    text-align: center;
+    color: #6c757d;
+}
+
+.fileName {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 1rem;
+    color: #495057;
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+.fileName i {
+    font-size: 2rem;
+    color: #6c757d;
+}
+
+.fileName span {
+    font-size: 14px;
+    word-break: break-word;
+    text-align: center;
+}

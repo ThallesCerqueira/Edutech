@@ -1,0 +1,15 @@
+/* Página de Exercícios - Container principal */
+.mainContainer {
+    padding: 24px;
+    padding-top: 0;
+    background-color: #f8f9fa;
+    margin: 0 48px 0 80px;
+    font-family: Arial, sans-serif;
+}
+
+.mainContainer h1 {
+    color: #212529;
+    margin-top: 48px;
+    padding-top: 24px;
+    padding: 16px 0;
+}

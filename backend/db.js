@@ -3,10 +3,10 @@ const { Pool } = require('pg');
 
 // 2. Cria um novo "pool" de conexões com o banco de dados
 const pool = new Pool({
-  user: 'postgres',       // Ex: 'postgres'
+  user: 'usuario',       // Ex: 'postgres'
   host: 'localhost',
-  database: 'edutech_db',     // O nome do banco que você criou
-  password: '123',
+  database: 'meubanco',     // O nome do banco que você criou
+  password: 'senha',
   port: 5432,
 });
 

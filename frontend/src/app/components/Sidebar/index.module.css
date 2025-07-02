@@ -1,0 +1,108 @@
+/* Sidebar fixa na esquerda - estilo simples */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 100vh;
+    background: #2c3e50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    z-index: 1000;
+}
+
+/* Logo no topo */
+.sidebar>div:first-child {
+    margin-bottom: 30px;
+}
+
+/* Container dos botões de navegação */
+.navButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+    width: 100%;
+    align-items: center;
+}
+
+/* Botões de navegação */
+.navButtons>button {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.navButtons>button.active {
+    background: #3498db;
+}
+
+/* Seção do usuário */
+.userSection {
+    position: relative;
+    margin-top: auto;
+}
+
+.user {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Menu do usuário */
+.userMenu {
+    position: absolute;
+    bottom: 0px;
+    left: 60px;
+    background: white;
+    min-width: 200px;
+    padding: 15px;
+    z-index: 1001;
+    border: 1px solid #ccc;
+}
+
+/* Informações do usuário */
+.userInfo {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.userInfo strong {
+    display: block;
+    color: #333;
+    font-size: 14px;
+}
+
+.userInfo span {
+    display: block;
+    color: #666;
+    font-size: 12px;
+}
+
+.userInfo small {
+    display: block;
+    color: #999;
+    font-size: 11px;
+}
+
+/* Botão de logout */
+.logoutButton {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #e74c3c;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+}
