@@ -2,7 +2,7 @@
 import React from 'react';
 import styles from "./index.module.css";
 import { useState, useEffect } from "react";
-import { UniversalList } from '../../Cards';
+import { List } from '../../index';
 import { ModalUniversal } from '../../Modal';
 import { SearchBar } from '../../SearchBars';
 
@@ -375,9 +375,7 @@ export default function MapasPage() {
         buttonText="Novo Mapa"
         buttonIcon="fa-plus"
         showSearch={true}
-      />
-
-      <UniversalList
+      />                <List
         items={mapasFiltrados}
         onVer={handleVerMapa}
         onEditar={handleEditarMapa}

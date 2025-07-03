@@ -2,7 +2,7 @@
 import styles from "./index.module.css";
 import { ModalUniversal } from "@/app/components/Modal";
 import { SearchBar } from "@/app/components/SearchBars";
-import { UniversalList } from "@/app/components/Cards";
+import { List } from "@/app/components";
 import { useState, useEffect } from "react";
 
 export default function ExerciciosPage() {
@@ -434,7 +434,7 @@ export default function ExerciciosPage() {
                     showSearch={true}
                 />
 
-                <UniversalList
+                <List
                     items={exerciciosFiltrados}
                     onVer={onVer}
                     onEditar={onEditar}

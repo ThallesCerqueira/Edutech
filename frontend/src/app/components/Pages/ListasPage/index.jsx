@@ -2,7 +2,7 @@
 import styles from "./index.module.css";
 import { ModalUniversal } from "@/app/components/Modal";
 import { SearchBar } from "@/app/components/SearchBars";
-import { UniversalList } from "@/app/components/Cards";
+import { List } from "@/app/components";
 import { useState, useEffect } from "react";
 
 export default function ListasPage() {
@@ -345,7 +345,7 @@ export default function ListasPage() {
                     showSearch={false}
                 />
 
-                <UniversalList
+                <List
                     items={listas}
                     onVer={handleVerLista}
                     onEditar={handleEditarLista}

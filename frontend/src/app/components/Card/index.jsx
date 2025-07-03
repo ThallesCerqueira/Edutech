@@ -14,7 +14,7 @@ import styles from './index.module.css';
  * @param {string} imageKey - Chave do campo da imagem (padrão: 'caminho')
  * @param {string} defaultImage - Imagem padrão quando não há imagem
  */
-export default function UniversalCard({
+export default function Card({
     item,
     onVer,
     onEditar,

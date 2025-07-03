@@ -1,6 +1,6 @@
 'use client';
 import styles from './index.module.css';
-import UniversalCard from '../UniversalCard';
+import Card from '../Card';
 
 /**
  * Lista universal que funciona para qualquer tipo de itens
@@ -17,7 +17,7 @@ import UniversalCard from '../UniversalCard';
  * @param {string} imageKey - Chave do campo da imagem
  * @param {string} defaultImage - Imagem padrão
  */
-export default function UniversalList({
+export default function List({
     items = [],
     onVer,
     onEditar,
@@ -48,7 +48,7 @@ export default function UniversalList({
     return (
         <Container className={containerClass}>
             {items.map((item) => (
-                <UniversalCard
+                <Card
                     key={item.id}
                     item={item}
                     onVer={onVer}
