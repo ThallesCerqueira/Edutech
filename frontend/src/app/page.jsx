@@ -7,7 +7,7 @@ import {
   MapasPage,
   ListasPage,
   RelatoriosPage
-} from "@/app/components/Pages";
+} from "@/app/components/Tabs";
 import { useState } from "react";
 
 export default function Page() {
