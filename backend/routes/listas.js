@@ -3,66 +3,55 @@ const express = require('express');
 const router = express.Router();
 const listaController = require('../controllers/listaController');
 const { asyncHandler } = require('../middlewares/errorHandler');
+const { verifyToken, requireAdminOrProfessor, checkTurmaAccess } = require('../middlewares/authMiddleware');
 
 /**
  * POST /listas
  * Endpoint para criar uma nova lista de exercícios.
- * Exemplo de corpo da requisição:
- * {
- *   "titulo": "Minha Lista",
- *   "descricao": "Descrição da lista",
- *   "exercicios": [{ "id": 1 }, { "id": 2 }]
- * }
+ * Apenas admins e professores podem criar listas.
  */
-router.post('/', asyncHandler(listaController.criarLista));
+router.post('/', verifyToken, requireAdminOrProfessor, asyncHandler(listaController.criarLista));
 
 /**
  * GET /listas
  * Endpoint para listar todas as listas de exercícios.
- * Retorna um array de objetos com id, titulo, descricao e total_exercicios.
- * Exemplo de resposta:
- * [
- *   { "id": 1, "titulo": "Lista 1", "descricao": "Descrição 1", "total_exercicios": 3 },
- *   { "id": 2, "titulo": "Lista 2", "descricao": "Descrição 2", "total_exercicios": 5 }
- * ]    
+ * Todos os usuários autenticados podem ver listas (filtradas por turma).
  */
-router.get('/', asyncHandler(listaController.listarListas));
+router.get('/', verifyToken, asyncHandler(listaController.listarListas));
 
 /**
  * GET /listas/:id
  * Endpoint para buscar uma lista de exercícios específica pelo ID.
- * Retorna o objeto da lista com seus exercícios.
- * Exemplo de resposta:
- * {
- *   "id": 1,
- *   "titulo": "Lista 1",
- *   "descricao": "Descrição 1",
- *   "exercicios": [
- *     { "id": 1, "titulo": "Exercício 1", "enunciado": "Enunciado 1", "dificuldade": "Fácil" },
- *     { "id": 2, "titulo": "Exercício 2", "enunciado": "Enunciado 2", "dificuldade": "Médio" }
- *   ]
- * }    
+ * Todos os usuários autenticados podem ver listas.
  */
-router.get('/:id', asyncHandler(listaController.buscarListaPorId));
+router.get('/:id', verifyToken, asyncHandler(listaController.buscarListaPorId));
+
+/**
+ * GET /listas/:id/exercicios
+ * Endpoint para listar exercícios de uma lista específica.
+ * Todos os usuários autenticados podem ver exercícios das listas.
+ */
+router.get('/:id/exercicios', verifyToken, asyncHandler(listaController.listarExerciciosDaLista));
+
+/**
+ * POST /listas/:id/exercicios
+ * Endpoint para adicionar um exercício a uma lista.
+ * Apenas admins e professores podem adicionar exercícios às listas.
+ */
+router.post('/:id/exercicios', verifyToken, requireAdminOrProfessor, asyncHandler(listaController.adicionarExercicioNaLista));
 
 /**
  * PUT /listas/:id
  * Endpoint para atualizar uma lista de exercícios existente.
- * Exemplo de corpo da requisição:
- * {
- *   "titulo": "Lista Atualizada",
- *   "descricao": "Descrição atualizada",
- *   "exercicios": [{ "id": 1 }, { "id": 2 }]
- * }
- * Retorna uma mensagem de sucesso ou erro.
+ * Apenas admins e professores podem editar listas.
  */
-router.put('/:id', asyncHandler(listaController.atualizarLista));
+router.put('/:id', verifyToken, requireAdminOrProfessor, asyncHandler(listaController.atualizarLista));
 
 /**
  * DELETE /listas/:id
  * Endpoint para deletar uma lista de exercícios pelo ID.
- * Retorna uma mensagem de sucesso ou erro.
+ * Apenas admins e professores podem excluir listas.
  */
-router.delete('/:id', asyncHandler(listaController.deletarLista));
+router.delete('/:id', verifyToken, requireAdminOrProfessor, asyncHandler(listaController.deletarLista));
 
 module.exports = router;

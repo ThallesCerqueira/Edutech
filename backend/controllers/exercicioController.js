@@ -7,14 +7,15 @@ class ExercicioController {
      * Cria um novo exercício
      */
     async criarExercicio(req, res) {
-        const { titulo, enunciado, dificuldade, id_mapa, alternativas } = req.body;
+        const { titulo, enunciado, dificuldade, id_mapa, alternativas, id_turma } = req.body;
 
         const exercicio = await exercicioService.criarExercicio({
             titulo: titulo.trim(),
             enunciado: enunciado.trim(),
             dificuldade,
             id_mapa,
-            alternativas
+            alternativas,
+            id_turma
         });
 
         res.status(201).json({
@@ -100,6 +101,25 @@ class ExercicioController {
         res.status(200).json({
             mensagem: 'Exercício deletado com sucesso.'
         });
+    }
+
+    /**
+     * GET /exercicios/turma/:id_turma
+     * Lista exercícios de uma turma específica
+     */
+    async listarExerciciosPorTurma(req, res) {
+        const { id_turma } = req.params;
+
+        if (!id_turma || isNaN(id_turma)) {
+            return res.status(400).json({
+                mensagem: 'ID da turma é obrigatório e deve ser um número.',
+                erro: 'INVALID_TURMA_ID'
+            });
+        }
+
+        const exercicios = await exercicioService.listarExerciciosPorTurma(parseInt(id_turma));
+
+        res.status(200).json(exercicios);
     }
 }
 

@@ -5,8 +5,11 @@ import { useState, useEffect } from "react";
 import { List } from '../../index';
 import { ModalUniversal } from '../../Modal';
 import { SearchBar } from '../../SearchBars';
+import { TabPageLayout } from '../../Layout';
+import { useAuth } from "@/app/contexts/AuthContext";
 
 export default function MapasPage() {
+  const { usuario } = useAuth();
   const [mapas, setMapas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalAberto, setModalAberto] = useState(false);
@@ -21,7 +24,9 @@ export default function MapasPage() {
   const mapasFiltrados = mapas.filter(mapa =>
     mapa.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (mapa.descricao && mapa.descricao.toLowerCase().includes(searchTerm.toLowerCase()))
-  ); useEffect(() => {
+  );
+
+  useEffect(() => {
     carregarMapas();
   }, []);
 
@@ -364,30 +369,46 @@ export default function MapasPage() {
   const handleNovoMapa = abrirModalNovo;
 
   return (
-    <div className={styles.mainContainer}>
-      <h1>Mapas Educacionais</h1>
+    <TabPageLayout
+      title="Mapas Educacionais"
+      icon="fa-map"
+      subtitle="Crie e gerencie mapas visuais para organizar o aprendizado"
+    >
+      {usuario?.tipo === 'aluno' ? (
+        <div className={styles.noPermission}>
+          <div className={styles.noPermissionContent}>
+            <i className="fa-solid fa-lock" style={{ fontSize: '48px', color: '#6b7280', marginBottom: '16px' }}></i>
+            <h3>Acesso Restrito</h3>
+            <p>Apenas professores e administradores podem acessar a seção de mapas.</p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <SearchBar
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            onNew={handleNovoMapa}
+            placeholder="Buscar mapas..."
+            buttonText="Novo Mapa"
+            buttonIcon="fa-plus"
+            showSearch={true}
+          />
 
-      <SearchBar
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onNew={handleNovoMapa}
-        placeholder="Buscar mapas..."
-        buttonText="Novo Mapa"
-        buttonIcon="fa-plus"
-        showSearch={true}
-      />                <List
-        items={mapasFiltrados}
-        onVer={handleVerMapa}
-        onEditar={handleEditarMapa}
-        onExcluir={handleExcluirMapa}
-        type="mapa"
-        layout="visual"
-        emptyMessage="Nenhum mapa encontrado."
-        emptySubMessage="Crie seu primeiro mapa educacional!"
-        emptyIcon="fa-solid fa-map"
-      />
+          <List
+            items={mapasFiltrados}
+            onVer={handleVerMapa}
+            onEditar={handleEditarMapa}
+            onExcluir={handleExcluirMapa}
+            type="mapa"
+            layout="visual"
+            emptyMessage="Nenhum mapa encontrado."
+            emptySubMessage="Crie seu primeiro mapa educacional!"
+            emptyIcon="fa-solid fa-map"
+          />
+        </>
+      )}
 
       <ModalUniversal {...getModalConfig()} />
-    </div>
+    </TabPageLayout>
   );
 }

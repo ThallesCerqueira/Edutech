@@ -1,0 +1,419 @@
+/* Estados vazios */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.emptyState i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: #dee2e6;
+}
+
+.emptyState h3 {
+    margin-bottom: 0.5rem;
+    color: #495057;
+    font-weight: 600;
+}
+
+.emptyState p {
+    margin: 0;
+    color: #6c757d;
+}
+
+/* Container principal das listas */
+.listasContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Card de lista individual */
+.listaCard {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.listaCard:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Header da lista (clicável para expandir/contrair) */
+.listaHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    cursor: pointer;
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+.listaHeader:hover {
+    background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+}
+
+.listaInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.listaTitulo {
+    margin: 0 0 0.5rem 0;
+    color: #212529;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.listaDescricao {
+    margin: 0 0 0.75rem 0;
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.listaStats {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.exerciciosCount {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #495057;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.exerciciosCount i {
+    color: #007bff;
+}
+
+/* Ações da lista */
+.listaActions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+.actionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+}
+
+.actionButton:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+    color: #495057;
+    transform: scale(1.05);
+}
+
+.actionButton:hover:last-of-type {
+    background: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.expandIcon {
+    margin-left: 0.5rem;
+    color: #6c757d;
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+/* Collapse de exercícios */
+.exerciciosCollapse {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    to {
+        opacity: 1;
+        max-height: 1000px;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+}
+
+.exerciciosHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.exerciciosHeader h4 {
+    margin: 0;
+    color: #495057;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.newExercicioButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.newExercicioButton:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Lista de exercícios */
+.exerciciosList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.exerciciosEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+    color: #6c757d;
+    background: white;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+}
+
+.exerciciosEmpty i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #dee2e6;
+}
+
+.exerciciosEmpty p {
+    margin: 0 0 1rem 0;
+    color: #6c757d;
+}
+
+.firstExercicioButton {
+    padding: 0.75rem 1.5rem;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.firstExercicioButton:hover {
+    background: #1e7e34;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Item individual de exercício */
+.exercicioItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.exercicioItem:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+}
+
+.exercicioInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.exercicioTitulo {
+    margin: 0 0 0.5rem 0;
+    color: #212529;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.exercicioMeta {
+    display: flex;
+    gap: 1rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.dificuldade {
+    color: #495057;
+    font-weight: 500;
+}
+
+.exercicioActions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+.exercicioActionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: white;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.75rem;
+}
+
+.exercicioActionButton:hover {
+    transform: scale(1.1);
+}
+
+.exercicioActionButton:first-child:hover {
+    background: #e3f2fd;
+    border-color: #bbdefb;
+    color: #1976d2;
+}
+
+.exercicioActionButton:nth-child(2):hover {
+    background: #f3e5f5;
+    border-color: #e1bee7;
+    color: #7b1fa2;
+}
+
+.exercicioActionButton:last-child:hover {
+    background: #ffebee;
+    border-color: #ffcdd2;
+    color: #d32f2f;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .listaHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .listaActions {
+        align-self: flex-end;
+        margin-left: 0;
+    }
+
+    .exerciciosHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .newExercicioButton {
+        align-self: flex-end;
+    }
+
+    .exercicioItem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .exercicioActions {
+        align-self: flex-end;
+        margin-left: 0;
+    }
+
+    .emptyState {
+        padding: 2rem 1rem;
+    }
+
+    .exerciciosCollapse {
+        padding: 1rem;
+    }
+
+    .listaTitulo {
+        font-size: 1.125rem;
+    }
+
+    .exercicioTitulo {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .listaCard {
+        margin: 0 -0.5rem;
+        border-radius: 8px;
+    }
+
+    .listaHeader {
+        padding: 1rem;
+    }
+
+    .exerciciosCollapse {
+        padding: 1rem 0.75rem;
+    }
+
+    .actionButton,
+    .exercicioActionButton {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .newExercicioButton,
+    .firstExercicioButton {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+}

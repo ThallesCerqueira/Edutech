@@ -8,7 +8,8 @@ export default function SearchBar({
     placeholder = "Buscar...",
     buttonText = "Novo",
     buttonIcon = "fa-plus",
-    showSearch = true
+    showSearch = true,
+    showButton = true
 }) {
     return (
         <div className={styles.searchContainer}>
@@ -20,13 +21,15 @@ export default function SearchBar({
                     onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
                 />
             )}
-            <button
-                className={styles.novoButton}
-                onClick={onNew}
-            >
-                <i className={`fa-solid ${buttonIcon}`}></i>
-                {buttonText}
-            </button>
+            {showButton && (
+                <button
+                    className={styles.novoButton}
+                    onClick={onNew}
+                >
+                    <i className={`fa-solid ${buttonIcon}`}></i>
+                    {buttonText}
+                </button>
+            )}
         </div>
     );
 }

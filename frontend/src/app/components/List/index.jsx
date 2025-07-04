@@ -16,6 +16,7 @@ import Card from '../Card';
  * @param {string} titleKey - Chave do campo título
  * @param {string} imageKey - Chave do campo da imagem
  * @param {string} defaultImage - Imagem padrão
+ * @param {boolean} viewOnly - Se true, remove botões de edição/exclusão
  */
 export default function List({
     items = [],
@@ -29,7 +30,8 @@ export default function List({
     emptyIcon = 'fa-solid fa-list',
     titleKey = 'titulo',
     imageKey = 'caminho',
-    defaultImage = '/mapaA.jpeg'
+    defaultImage = '/mapaA.jpeg',
+    viewOnly = false
 }) {
     if (items.length === 0) {
         return (
@@ -52,13 +54,14 @@ export default function List({
                     key={item.id}
                     item={item}
                     onVer={onVer}
-                    onEditar={onEditar}
-                    onExcluir={onExcluir}
+                    onEditar={viewOnly ? null : onEditar}
+                    onExcluir={viewOnly ? null : onExcluir}
                     type={type}
                     layout={layout}
                     titleKey={titleKey}
                     imageKey={imageKey}
                     defaultImage={defaultImage}
+                    viewOnly={viewOnly}
                 />
             ))}
         </Container>

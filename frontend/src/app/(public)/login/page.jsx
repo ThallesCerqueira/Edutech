@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './page.module.css';
 
@@ -139,6 +140,10 @@ export default function LoginPage() {
                             {loading ? 'Carregando...' : 'Entrar'}
                         </button>
                     </form>
+
+                    <div className={styles.registerLink}>
+                        <p>Não tem uma conta? <Link href="/cadastro">Cadastre-se</Link></p>
+                    </div>
                 </div>
             </div>
         </div>

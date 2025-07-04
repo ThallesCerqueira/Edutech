@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
     const [usuario, setUsuario] = useState(null);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(null);
+    const [turmaSelecionada, setTurmaSelecionada] = useState(null);
     const [mounted, setMounted] = useState(false);
     const router = useRouter();
 
@@ -30,20 +31,28 @@ export const AuthProvider = ({ children }) => {
         try {
             const tokenSalvo = localStorage.getItem('token');
             const usuarioSalvo = localStorage.getItem('usuario');
+            const turmaSalva = localStorage.getItem('turmaSelecionada');
 
             if (tokenSalvo && usuarioSalvo) {
                 const usuarioData = JSON.parse(usuarioSalvo);
                 setToken(tokenSalvo);
                 setUsuario(usuarioData);
+                
+                if (turmaSalva) {
+                    const turmaData = JSON.parse(turmaSalva);
+                    setTurmaSelecionada(turmaData);
+                }
             }
         } catch (error) {
             console.error('Erro ao carregar dados do usuário:', error);
             // Limpar dados corrompidos sem chamar logout (evita loop)
             setUsuario(null);
             setToken(null);
+            setTurmaSelecionada(null);
             if (typeof window !== 'undefined') {
                 localStorage.removeItem('token');
                 localStorage.removeItem('usuario');
+                localStorage.removeItem('turmaSelecionada');
             }
         }
 
@@ -65,11 +74,20 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setUsuario(null);
         setToken(null);
+        setTurmaSelecionada(null);
         if (typeof window !== 'undefined') {
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
+            localStorage.removeItem('turmaSelecionada');
         }
         router.push('/login');
+    };
+
+    const selecionarTurma = (turma) => {
+        setTurmaSelecionada(turma);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('turmaSelecionada', JSON.stringify(turma));
+        }
     };
 
     const isAuthenticated = () => {
@@ -79,9 +97,11 @@ export const AuthProvider = ({ children }) => {
     const value = {
         usuario,
         token,
+        turmaSelecionada,
         loading: loading || !mounted,
         login,
         logout,
+        selecionarTurma,
         isAuthenticated
     };
 

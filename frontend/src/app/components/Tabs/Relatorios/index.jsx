@@ -1,8 +1,11 @@
 'use client';
 import styles from "./index.module.css";
+import { TabPageLayout } from "@/app/components/Layout";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 export default function RelatoriosPage() {
+    const { turmaSelecionada, usuario } = useAuth();
     const [relatorios, setRelatorios] = useState([]);
 
     useEffect(() => {
@@ -23,34 +26,69 @@ export default function RelatoriosPage() {
         }
     }
 
+    const handleGerarRelatorio = () => {
+        // Implementar lógica para gerar relatório
+        console.log('Gerar relatório personalizado');
+    };
+
     return (
-        <div className={styles.mainContainer}>
-            <h1>Relatórios</h1>
-            <div className={styles.searchContainer}>
-                <button className={styles.newButton}>
-                    Gerar Relatório <i className="fa-solid fa-chart-line" style={{ marginLeft: 5 }}></i>
-                </button>
-            </div>
-
-            <div className={styles.cardsContainer}>
-                {relatorios.map((relatorio) => (
-                    <div key={relatorio.id} className={styles.reportCard}>
-                        <div className={styles.reportInfo}>
-                            <h3 className={styles.reportTitle}>{relatorio.tipo}</h3>
-                            <p className={styles.reportPeriod}>{relatorio.periodo}</p>
-                        </div>
-                        <div className={styles.reportValue}>
-                            {relatorio.valor}
-                        </div>
+        <TabPageLayout
+            title="Relatórios"
+            icon="fa-chart-line"
+            subtitle="Acompanhe métricas e progresso da turma"
+            headerActions={
+                turmaSelecionada && usuario?.tipo !== 'aluno' ? (
+                    <button
+                        className={styles.newButton}
+                        onClick={handleGerarRelatorio}
+                    >
+                        <i className="fa-solid fa-chart-line"></i>
+                        Gerar Relatório
+                    </button>
+                ) : null
+            }
+        >
+            {!turmaSelecionada ? (
+                <div className={styles.noTurma}>
+                    <div className={styles.noTurmaContent}>
+                        <i className="fa-solid fa-users" style={{ fontSize: '48px', color: '#6b7280', marginBottom: '16px' }}></i>
+                        <h3>Nenhuma turma selecionada</h3>
+                        <p>Selecione uma turma para visualizar relatórios específicos da turma.</p>
                     </div>
-                ))}
-            </div>
+                </div>
+            ) : usuario?.tipo === 'aluno' ? (
+                <div className={styles.noPermission}>
+                    <div className={styles.noPermissionContent}>
+                        <i className="fa-solid fa-lock" style={{ fontSize: '48px', color: '#6b7280', marginBottom: '16px' }}></i>
+                        <h3>Acesso Restrito</h3>
+                        <p>Apenas professores e administradores podem acessar relatórios.</p>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    <div className={styles.cardsContainer}>
+                        {relatorios.map((relatorio) => (
+                            <div key={relatorio.id} className={styles.reportCard}>
+                                <div className={styles.reportInfo}>
+                                    <h3 className={styles.reportTitle}>{relatorio.tipo}</h3>
+                                    <p className={styles.reportPeriod}>{relatorio.periodo}</p>
+                                </div>
+                                <div className={styles.reportValue}>
+                                    {relatorio.valor}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
-            {relatorios.length === 0 && (
-                <p style={{ textAlign: 'center', color: '#666', marginTop: '2rem' }}>
-                    Nenhum relatório disponível no momento.
-                </p>
+                    {relatorios.length === 0 && (
+                        <div className={styles.emptyState}>
+                            <i className="fa-solid fa-chart-line"></i>
+                            <h3>Nenhum relatório disponível</h3>
+                            <p>Os relatórios aparecerão aqui conforme os dados forem coletados.</p>
+                        </div>
+                    )}
+                </>
             )}
-        </div>
+        </TabPageLayout>
     );
 }

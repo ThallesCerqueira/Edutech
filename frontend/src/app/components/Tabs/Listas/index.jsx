@@ -3,9 +3,12 @@ import styles from "./index.module.css";
 import { ModalUniversal } from "@/app/components/Modal";
 import { SearchBar } from "@/app/components/SearchBars";
 import { List } from "@/app/components";
+import { TabPageLayout } from "@/app/components/Layout";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 export default function ListasPage() {
+    const { turmaSelecionada, usuario } = useAuth();
     const [listas, setListas] = useState([]);
     const [exerciciosDisponiveis, setExerciciosDisponiveis] = useState([]);
     const [modalAberto, setModalAberto] = useState(false);
@@ -16,13 +19,19 @@ export default function ListasPage() {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        carregarListas();
-        carregarExercicios();
-    }, []);
+        if (turmaSelecionada) {
+            carregarListas();
+            carregarExercicios();
+        }
+    }, [turmaSelecionada]);
 
     const carregarListas = async () => {
         try {
-            const response = await fetch('http://localhost:3001/listas');
+            const url = turmaSelecionada
+                ? `http://localhost:3001/listas?id_turma=${turmaSelecionada.id}`
+                : 'http://localhost:3001/listas';
+
+            const response = await fetch(url);
             if (!response.ok) throw new Error('Erro ao carregar listas');
 
             const data = await response.json();
@@ -34,8 +43,30 @@ export default function ListasPage() {
 
     const carregarExercicios = async () => {
         try {
-            const response = await fetch('http://localhost:3001/exercicios');
-            if (!response.ok) throw new Error('Erro ao carregar exercícios');
+            if (!turmaSelecionada) {
+                setExerciciosDisponiveis([]);
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:3001/exercicios/turma/${turmaSelecionada.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                // Fallback para endpoint antigo se o novo não existir
+                const fallbackResponse = await fetch('http://localhost:3001/exercicios');
+                if (fallbackResponse.ok) {
+                    const data = await fallbackResponse.json();
+                    setExerciciosDisponiveis(data);
+                } else {
+                    throw new Error('Erro ao carregar exercícios');
+                }
+                return;
+            }
 
             const data = await response.json();
             setExerciciosDisponiveis(data);
@@ -117,7 +148,8 @@ export default function ListasPage() {
             const dadosEnvio = {
                 titulo: formData.titulo,
                 descricao: formData.descricao,
-                exercicios: formData.exercicios.map(id => ({ id: parseInt(id) }))
+                exercicios: formData.exercicios.map(id => ({ id: parseInt(id) })),
+                id_turma: turmaSelecionada?.id || null
             };
 
             const url = modalType === 'edit'
@@ -197,12 +229,9 @@ export default function ListasPage() {
                         {
                             key: 'exercicios',
                             label: 'Exercícios',
-                            type: 'multiselect',
+                            type: 'exercicios',
                             required: true,
-                            options: exerciciosDisponiveis.map(ex => ({
-                                value: ex.id,
-                                label: `${ex.titulo} (Dificuldade: ${ex.dificuldade || 'N/A'})`
-                            })),
+                            exerciciosDisponiveis: exerciciosDisponiveis,
                             placeholder: 'Selecione os exercícios para a lista'
                         }
                     ],
@@ -235,12 +264,9 @@ export default function ListasPage() {
                         {
                             key: 'exercicios',
                             label: 'Exercícios',
-                            type: 'multiselect',
+                            type: 'exercicios',
                             required: true,
-                            options: exerciciosDisponiveis.map(ex => ({
-                                value: ex.id,
-                                label: `${ex.titulo} (Dificuldade: ${ex.dificuldade || 'N/A'})`
-                            })),
+                            exerciciosDisponiveis: exerciciosDisponiveis,
                             placeholder: 'Selecione os exercícios para a lista'
                         }
                     ],
@@ -334,30 +360,44 @@ export default function ListasPage() {
     };
 
     return (
-        <>
-            <div className={styles.mainContainer}>
-                <h1>Listas de Exercícios</h1>
+        <TabPageLayout
+            title="Listas de Exercícios"
+            icon="fa-list-check"
+            subtitle="Gerencie suas listas de exercícios e acompanhe o progresso dos alunos"
+        >
+            {!turmaSelecionada ? (
+                <div className={styles.noTurma}>
+                    <div className={styles.noTurmaContent}>
+                        <i className="fa-solid fa-users" style={{ fontSize: '48px', color: '#6b7280', marginBottom: '16px' }}></i>
+                        <h3>Nenhuma turma selecionada</h3>
+                        <p>Selecione uma turma para visualizar e gerenciar as listas de exercícios.</p>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    <SearchBar
+                        onNew={usuario?.tipo !== 'aluno' ? handleNovaLista : null}
+                        buttonText="Nova Lista"
+                        buttonIcon="fa-plus"
+                        showSearch={false}
+                        showButton={usuario?.tipo !== 'aluno'}
+                    />
 
-                <SearchBar
-                    onNew={handleNovaLista}
-                    buttonText="Nova Lista"
-                    buttonIcon="fa-plus"
-                    showSearch={false}
-                />
-
-                <List
-                    items={listas}
-                    onVer={handleVerLista}
-                    onEditar={handleEditarLista}
-                    onExcluir={handleExcluirLista}
-                    type="lista"
-                    emptyMessage="Nenhuma lista encontrada."
-                    emptySubMessage="Crie sua primeira lista de exercícios!"
-                    emptyIcon="fa-solid fa-list-check"
-                />
-            </div>
+                    <List
+                        items={listas}
+                        onVer={handleVerLista}
+                        onEditar={usuario?.tipo !== 'aluno' ? handleEditarLista : null}
+                        onExcluir={usuario?.tipo !== 'aluno' ? handleExcluirLista : null}
+                        type="lista"
+                        emptyMessage="Nenhuma lista encontrada."
+                        emptySubMessage={usuario?.tipo !== 'aluno' ? "Crie sua primeira lista de exercícios!" : "Nenhuma lista disponível no momento."}
+                        emptyIcon="fa-solid fa-list-check"
+                        viewOnly={usuario?.tipo === 'aluno'}
+                    />
+                </>
+            )}
 
             <ModalUniversal {...getModalConfig()} />
-        </>
+        </TabPageLayout>
     );
 }

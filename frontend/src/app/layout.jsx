@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from './contexts/AuthContext';
+import { SystemStatus } from './components';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Script src="https://kit.fontawesome.com/1dc5e8d3e7.js" strategy="afterInteractive" crossOrigin="anonymous" />
+        <SystemStatus />
         <AuthProvider>
           {children}
         </AuthProvider>

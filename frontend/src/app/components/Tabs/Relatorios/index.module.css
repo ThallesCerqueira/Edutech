@@ -1,50 +1,144 @@
 /* Página de Relatórios */
-.mainContainer {
-    padding: 24px;
-    padding-top: 0;
-    background-color: #f8f9fa;
-    margin: 0 48px 0 80px;
-    font-family: Arial, sans-serif;
+
+/* Botão do cabeçalho */
+.newButton {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
 }
 
-.mainContainer h1 {
-    color: #212529;
-    margin-top: 48px;
-    padding-top: 24px;
-    padding: 16px 0;
+.newButton:hover {
+    background-color: #0052a3;
+    transform: translateY(-1px);
 }
 
-.relatoriosContainer {
+/* Container dos cards */
+.cardsContainer {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 16px;
     margin-top: 16px;
 }
 
-.relatorioCard {
+/* Cards de relatório */
+.reportCard {
     background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    transition: 0.15s ease-in-out;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.relatorioCard:hover {
+.reportCard:hover {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     transform: translateY(-1px);
 }
 
-.relatorioCard h3 {
+.reportInfo {
+    flex: 1;
+}
+
+.reportTitle {
     margin: 0 0 8px 0;
-    color: #212529;
+    color: #1f2937;
     font-size: 18px;
     font-weight: 600;
 }
 
-.relatorioCard p {
+.reportPeriod {
     margin: 0;
-    color: #6c757d;
+    color: #6b7280;
     font-size: 14px;
+    line-height: 1.5;
+}
+
+.reportValue {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0066cc;
+    text-align: right;
+}
+
+/* Estados vazios e de acesso */
+.noTurma,
+.noPermission {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-top: 16px;
+}
+
+.noTurmaContent,
+.noPermissionContent {
+    text-align: center;
+    padding: 40px;
+    max-width: 400px;
+}
+
+.noTurmaContent h3,
+.noPermissionContent h3 {
+    color: #1f2937;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+}
+
+.noTurmaContent p,
+.noPermissionContent p {
+    color: #6b7280;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    background-color: #f9fafb;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    margin-top: 16px;
+    padding: 40px;
+    text-align: center;
+}
+
+.emptyState i {
+    font-size: 48px;
+    color: #9ca3af;
+    margin-bottom: 16px;
+}
+
+.emptyState h3 {
+    color: #4b5563;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.emptyState p {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
+    max-width: 300px;
     line-height: 1.5;
 }

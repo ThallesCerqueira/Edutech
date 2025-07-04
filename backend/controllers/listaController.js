@@ -6,13 +6,13 @@ const listaService = require('../services/listaService');
  */
 const criarLista = async (req, res) => {
     try {
-        const { titulo, descricao, exercicios } = req.body;
+        const { titulo, descricao, exercicios, id_turma } = req.body;
 
-        if (!titulo || !descricao || !exercicios || exercicios.length === 0) {
-            return res.status(400).json({ mensagem: 'Título, descrição e exercícios são obrigatórios.' });
+        if (!titulo || !id_turma) {
+            return res.status(400).json({ mensagem: 'Título e turma são obrigatórios.' });
         }
 
-        const novaListaId = await listaService.criarLista(titulo, descricao, exercicios);
+        const novaListaId = await listaService.criarLista(titulo, descricao, exercicios || [], id_turma);
         res.status(201).json({ mensagem: 'Lista de exercícios criada com sucesso.', id: novaListaId });
     } catch (error) {
         console.error('Erro no controller ao criar lista:', error.message);
@@ -21,11 +21,12 @@ const criarLista = async (req, res) => {
 };
 
 /**
- * Listar todas as listas de exercícios
+ * Listar todas as listas de exercícios (com filtro opcional por turma)
  */
 const listarListas = async (req, res) => {
     try {
-        const listas = await listaService.listarListas();
+        const { id_turma } = req.query;
+        const listas = await listaService.listarListas(id_turma);
         res.status(200).json(listas);
     } catch (error) {
         console.error('Erro no controller ao listar listas:', error.message);
@@ -58,13 +59,13 @@ const buscarListaPorId = async (req, res) => {
 const atualizarLista = async (req, res) => {
     try {
         const { id } = req.params;
-        const { titulo, descricao, exercicios } = req.body;
+        const { titulo, descricao, exercicios, id_turma } = req.body;
 
-        if (!titulo || !descricao || !exercicios || exercicios.length === 0) {
-            return res.status(400).json({ mensagem: 'Título, descrição e exercícios são obrigatórios.' });
+        if (!titulo || !id_turma) {
+            return res.status(400).json({ mensagem: 'Título e turma são obrigatórios.' });
         }
 
-        await listaService.atualizarLista(id, titulo, descricao, exercicios);
+        await listaService.atualizarLista(id, titulo, descricao, exercicios || [], id_turma);
         res.status(200).json({ mensagem: 'Lista de exercícios atualizada com sucesso.' });
     } catch (error) {
         console.error('Erro no controller ao atualizar lista:', error.message);
@@ -91,10 +92,46 @@ const deletarLista = async (req, res) => {
     }
 };
 
+/**
+ * Listar exercícios de uma lista específica
+ */
+const listarExerciciosDaLista = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const exercicios = await listaService.listarExerciciosDaLista(id);
+        res.status(200).json(exercicios);
+    } catch (error) {
+        console.error('Erro no controller ao listar exercícios da lista:', error.message);
+        res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+    }
+};
+
+/**
+ * Adicionar exercício a uma lista
+ */
+const adicionarExercicioNaLista = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { id_exercicio } = req.body;
+
+        if (!id_exercicio) {
+            return res.status(400).json({ mensagem: 'ID do exercício é obrigatório.' });
+        }
+
+        await listaService.adicionarExercicioNaLista(id, id_exercicio);
+        res.status(200).json({ mensagem: 'Exercício adicionado à lista com sucesso.' });
+    } catch (error) {
+        console.error('Erro no controller ao adicionar exercício na lista:', error.message);
+        res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+    }
+};
+
 module.exports = {
     criarLista,
     listarListas,
     buscarListaPorId,
     atualizarLista,
-    deletarLista
+    deletarLista,
+    listarExerciciosDaLista,
+    adicionarExercicioNaLista
 };

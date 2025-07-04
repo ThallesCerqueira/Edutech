@@ -3,9 +3,12 @@ import styles from "./index.module.css";
 import { ModalUniversal } from "@/app/components/Modal";
 import { SearchBar } from "@/app/components/SearchBars";
 import { List } from "@/app/components";
+import { TabPageLayout } from "@/app/components/Layout";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 export default function ExerciciosPage() {
+    const { turmaSelecionada } = useAuth();
     const [modalAberto, setModalAberto] = useState(false);
     const [modalMode, setModalMode] = useState('view'); // 'view', 'form', 'confirm'
     const [modalType, setModalType] = useState(''); // 'new', 'edit', 'view', 'delete'
@@ -18,9 +21,11 @@ export default function ExerciciosPage() {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        carregarExercicios();
+        if (turmaSelecionada) {
+            carregarExercicios();
+        }
         carregarMapas();
-    }, []);
+    }, [turmaSelecionada]);
 
     useEffect(() => {
         if (termoBusca === '') {
@@ -36,7 +41,20 @@ export default function ExerciciosPage() {
     // Função para carregar exercícios do backend
     const carregarExercicios = async () => {
         try {
-            const response = await fetch('http://localhost:3001/exercicios');
+            if (!turmaSelecionada) {
+                setExercicios([]);
+                setExerciciosFiltrados([]);
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:3001/exercicios/turma/${turmaSelecionada.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
             if (!response.ok) throw new Error('Erro ao carregar exercícios');
 
             const data = await response.json();
@@ -44,6 +62,17 @@ export default function ExerciciosPage() {
             setExerciciosFiltrados(data);
         } catch (error) {
             console.error('Erro ao carregar exercícios:', error);
+            // Fallback para endpoint antigo se o novo não existir
+            try {
+                const response = await fetch('http://localhost:3001/exercicios');
+                if (response.ok) {
+                    const data = await response.json();
+                    setExercicios(data);
+                    setExerciciosFiltrados(data);
+                }
+            } catch (fallbackError) {
+                console.error('Erro no fallback:', fallbackError);
+            }
         }
     };
 
@@ -124,6 +153,11 @@ export default function ExerciciosPage() {
         setError('');
 
         try {
+            // Validar se há turma selecionada
+            if (!turmaSelecionada) {
+                throw new Error('Selecione uma turma antes de criar um exercício');
+            }
+
             // Validar se alternativas foram fornecidas
             if (!formData.alternativas || formData.alternativas.length === 0) {
                 throw new Error('Adicione pelo menos uma alternativa para o exercício');
@@ -135,6 +169,7 @@ export default function ExerciciosPage() {
                 enunciado: formData.enunciado,
                 dificuldade: parseInt(formData.dificuldade),
                 id_mapa: formData.id_mapa ? parseInt(formData.id_mapa) : null,
+                id_turma: turmaSelecionada.id, // Adicionar ID da turma
                 alternativas: formData.alternativas.map((alt, index) => ({
                     descricao: alt.descricao,
                     correta: alt.correta || false
@@ -147,6 +182,7 @@ export default function ExerciciosPage() {
                 throw new Error('Marque pelo menos uma alternativa como correta');
             }
 
+            const token = localStorage.getItem('token');
             const url = modalType === 'edit'
                 ? `http://localhost:3001/exercicios/${exercicioSelecionado.id}`
                 : 'http://localhost:3001/exercicios';
@@ -157,6 +193,7 @@ export default function ExerciciosPage() {
                 method,
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(dadosEnvio),
             });
@@ -420,34 +457,60 @@ export default function ExerciciosPage() {
     };
 
     return (
-        <>
-            <div className={styles.mainContainer}>
-                <h1>Exercícios</h1>
+        <TabPageLayout
+            title="Exercícios"
+            icon="fa-book"
+            subtitle="Gerencie exercícios e questões para suas turmas"
+        >
+            {!turmaSelecionada ? (
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '300px',
+                    backgroundColor: '#ffffff',
+                    border: '2px dashed #e5e7eb',
+                    borderRadius: '12px',
+                    padding: '40px',
+                    textAlign: 'center',
+                    margin: '20px 0'
+                }}>
+                    <i className="fa-solid fa-users" style={{ fontSize: '48px', color: '#9ca3af', marginBottom: '16px' }}></i>
+                    <h3 style={{ color: '#1f2937', fontSize: '18px', fontWeight: '600', margin: '0 0 8px 0' }}>
+                        Nenhuma turma selecionada
+                    </h3>
+                    <p style={{ color: '#6b7280', fontSize: '14px', margin: '0' }}>
+                        Selecione uma turma para visualizar e gerenciar exercícios específicos da turma.
+                    </p>
+                </div>
+            ) : (
+                <>
+                    <SearchBar
+                        searchTerm={termoBusca}
+                        onSearchChange={setTermoBusca}
+                        onNew={abrirModalNovo}
+                        placeholder="Buscar exercícios..."
+                        buttonText="Novo Exercício"
+                        buttonIcon="fa-plus"
+                        showSearch={true}
+                    />
 
-                <SearchBar
-                    searchTerm={termoBusca}
-                    onSearchChange={setTermoBusca}
-                    onNew={abrirModalNovo}
-                    placeholder="Buscar exercícios..."
-                    buttonText="Novo Exercício"
-                    buttonIcon="fa-plus"
-                    showSearch={true}
-                />
-
-                <List
-                    items={exerciciosFiltrados}
-                    onVer={onVer}
-                    onEditar={onEditar}
-                    onExcluir={onExcluir}
-                    type="exercicio"
-                    emptyMessage="Nenhum exercício encontrado."
-                    emptySubMessage="Crie seu primeiro exercício!"
-                    emptyIcon="fa-solid fa-book"
-                />
-            </div>
+                    <List
+                        items={exerciciosFiltrados}
+                        onVer={onVer}
+                        onEditar={onEditar}
+                        onExcluir={onExcluir}
+                        type="exercicio"
+                        emptyMessage="Nenhum exercício encontrado nesta turma."
+                        emptySubMessage="Crie seu primeiro exercício para esta turma!"
+                        emptyIcon="fa-solid fa-book"
+                    />
+                </>
+            )}
 
             <ModalUniversal {...getModalConfig()} />
-        </>
+        </TabPageLayout>
     );
 
 }

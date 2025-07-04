@@ -3,13 +3,14 @@ const pool = require('../db');
 
 class ExercicioService {
     /**
-     * Cria um novo exercício com suas alternativas
+     * Cria um novo exercício com suas alternativas e associa a uma turma via lista
      */
-    async criarExercicio({ titulo, enunciado, dificuldade, id_mapa, alternativas }) {
+    async criarExercicio({ titulo, enunciado, dificuldade, id_mapa, alternativas, id_turma }) {
         const client = await pool.connect();
         try {
             await client.query('BEGIN');
 
+            // Cria o exercício
             const result = await client.query(
                 'INSERT INTO exercicio (titulo, enunciado, dificuldade, id_mapa) VALUES ($1, $2, $3, $4) RETURNING id;',
                 [titulo, enunciado, dificuldade, id_mapa]
@@ -17,10 +18,38 @@ class ExercicioService {
 
             const exercicioId = result.rows[0].id;
 
+            // Cria as alternativas
             for (const alternativa of alternativas) {
                 await client.query(
                     'INSERT INTO alternativa (id_exercicio, correta, descricao) VALUES ($1, $2, $3);',
                     [exercicioId, alternativa.correta, alternativa.descricao]
+                );
+            }
+
+            // Se foi fornecido id_turma, associa o exercício a uma lista dessa turma
+            if (id_turma) {
+                // Busca uma lista existente na turma ou cria uma nova
+                let listaResult = await client.query(
+                    'SELECT id FROM lista WHERE id_turma = $1 AND titulo = $2 LIMIT 1;',
+                    [id_turma, 'Exercícios Gerais']
+                );
+
+                let listaId;
+                if (listaResult.rows.length === 0) {
+                    // Cria uma lista padrão para exercícios da turma
+                    const novaListaResult = await client.query(
+                        'INSERT INTO lista (titulo, descricao, id_turma) VALUES ($1, $2, $3) RETURNING id;',
+                        ['Exercícios Gerais', 'Lista automática para exercícios da turma', id_turma]
+                    );
+                    listaId = novaListaResult.rows[0].id;
+                } else {
+                    listaId = listaResult.rows[0].id;
+                }
+
+                // Associa o exercício à lista
+                await client.query(
+                    'INSERT INTO lista_exercicio (id_lista, id_exercicio) VALUES ($1, $2);',
+                    [listaId, exercicioId]
                 );
             }
 
@@ -122,6 +151,21 @@ class ExercicioService {
     async exercicioExiste(id) {
         const result = await pool.query('SELECT 1 FROM exercicio WHERE id = $1;', [id]);
         return result.rows.length > 0;
+    }
+
+    /**
+     * Lista exercícios de uma turma específica (através das listas)
+     */
+    async listarExerciciosPorTurma(id_turma) {
+        const result = await pool.query(`
+            SELECT DISTINCT e.id, e.titulo, e.dificuldade 
+            FROM exercicio e
+            INNER JOIN lista_exercicio le ON e.id = le.id_exercicio
+            INNER JOIN lista l ON le.id_lista = l.id
+            WHERE l.id_turma = $1
+            ORDER BY e.id ASC;
+        `, [id_turma]);
+        return result.rows;
     }
 }
 

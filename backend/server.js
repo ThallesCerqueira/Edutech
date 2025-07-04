@@ -13,11 +13,21 @@ const publicPath = path.join(__dirname, '..', 'frontend', 'public');
 app.use(express.static(publicPath));
 app.use('/images', express.static(path.join(publicPath, 'images')));
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'Backend is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Rotas
 app.use('/mapas', require('./routes/mapas'));
 app.use('/exercicios', require('./routes/exercicios'));
 app.use('/listas', require('./routes/listas'));
 app.use('/usuarios', require('./routes/usuarios'));
+app.use('/turmas', require('./routes/turmas'));
 // app.use('/respostas', require('./routes/respostas'));
 
 // Middleware de tratamento de erros (deve vir por último)

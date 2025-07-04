@@ -13,6 +13,7 @@ import styles from './index.module.css';
  * @param {string} layout - Layout do card ('list' ou 'visual') (padrão: 'list')
  * @param {string} imageKey - Chave do campo da imagem (padrão: 'caminho')
  * @param {string} defaultImage - Imagem padrão quando não há imagem
+ * @param {boolean} viewOnly - Se true, remove botões de edição/exclusão
  */
 export default function Card({
     item,
@@ -23,7 +24,8 @@ export default function Card({
     type = 'item',
     layout = 'list', // 'list' ou 'visual'
     imageKey = 'caminho',
-    defaultImage = '/mapaA.jpeg'
+    defaultImage = '/mapaA.jpeg',
+    viewOnly = false
 }) {
     const getTitle = () => {
         return item[titleKey] || item.titulo || item.nome || 'Sem título';
@@ -95,7 +97,7 @@ export default function Card({
                     </div>
 
                     <div className={styles.visualActions}>
-                        {onEditar && (
+                        {onEditar && !viewOnly && (
                             <button
                                 className={styles.editButton}
                                 onClick={(e) => {
@@ -107,7 +109,7 @@ export default function Card({
                                 <i className="fa-solid fa-pen"></i>
                             </button>
                         )}
-                        {onExcluir && (
+                        {onExcluir && !viewOnly && (
                             <button
                                 className={styles.deleteButton}
                                 onClick={(e) => {
@@ -135,7 +137,7 @@ export default function Card({
                 {getTitle()}
             </button>
             <div className={styles.listActions}>
-                {onEditar && (
+                {onEditar && !viewOnly && (
                     <button
                         className={styles.editAction}
                         onClick={() => onEditar(item.id || item)}
@@ -144,7 +146,7 @@ export default function Card({
                         <i className="fa-solid fa-pen" style={{ color: '#222' }}></i>
                     </button>
                 )}
-                {onExcluir && (
+                {onExcluir && !viewOnly && (
                     <button
                         className={styles.deleteAction}
                         onClick={() => onExcluir(item.id || item)}

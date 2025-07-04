@@ -1,9 +1,10 @@
 /* Sidebar fixa na esquerda - estilo simples */
 .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 80px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
     height: 100vh;
     background: #2c3e50;
     display: flex;
@@ -11,6 +12,7 @@
     align-items: center;
     padding: 20px 0;
     z-index: 1000;
+    transition: all 0.3s ease;
 }
 
 /* Logo no topo */
@@ -96,6 +98,35 @@
     font-size: 11px;
 }
 
+/* Ações do menu do usuário */
+.userMenuActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Botão de perfil */
+.perfilButton {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #3498db;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.perfilButton:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+}
+
 /* Botão de logout */
 .logoutButton {
     width: 100%;
@@ -105,4 +136,340 @@
     color: white;
     font-size: 12px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.logoutButton:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+}
+
+/* Informações da turma selecionada */
+.turmaInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0;
+    padding: 12px 8px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 8px;
+    width: 90%;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.turmaHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #3498db;
+    font-size: 12px;
+    text-align: center;
+    word-break: break-word;
+    max-width: 100%;
+}
+
+.turmaHeader i {
+    font-size: 14px;
+}
+
+.turmaHeader span {
+    font-weight: 600;
+    line-height: 1.2;
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.trocarTurma {
+    background: rgba(52, 152, 219, 0.2);
+    border: 1px solid #3498db;
+    color: #3498db;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.trocarTurma:hover {
+    background: #3498db;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 70px;
+        padding: 16px 0;
+    }
+
+    .navButtons>button {
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .user {
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .turmaInfo {
+        padding: 10px 6px;
+        width: 85%;
+    }
+
+    .turmaHeader {
+        font-size: 11px;
+    }
+
+    .turmaHeader span {
+        max-width: 50px;
+    }
+
+    .trocarTurma {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+        padding: 12px 0;
+    }
+
+    .sidebar>div:first-child {
+        margin-bottom: 20px;
+    }
+
+    .navButtons {
+        gap: 12px;
+    }
+
+    .navButtons>button {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+
+    .user {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+
+    .turmaInfo {
+        padding: 8px 4px;
+        width: 80%;
+        margin: 16px 0;
+    }
+
+    .turmaHeader {
+        font-size: 10px;
+        gap: 2px;
+    }
+
+    .turmaHeader i {
+        font-size: 12px;
+    }
+
+    .turmaHeader span {
+        max-width: 40px;
+        font-size: 9px;
+    }
+
+    .trocarTurma {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+    }
+
+    /* Ajustar menu do usuário em mobile */
+    .userMenu {
+        left: 65px;
+        min-width: 180px;
+        padding: 12px;
+    }
+
+    .userInfo strong {
+        font-size: 13px;
+    }
+
+    .userInfo span {
+        font-size: 11px;
+    }
+
+    .userInfo small {
+        font-size: 10px;
+    }
+
+    .logoutButton {
+        padding: 8px;
+        font-size: 11px;
+    }
+
+    .perfilButton {
+        padding: 8px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 50px;
+        padding: 10px 0;
+    }
+
+    .sidebar>div:first-child {
+        margin-bottom: 15px;
+    }
+
+    .navButtons {
+        gap: 10px;
+    }
+
+    .navButtons>button {
+        width: 35px;
+        height: 35px;
+        font-size: 12px;
+        border-radius: 4px;
+    }
+
+    .user {
+        width: 35px;
+        height: 35px;
+        font-size: 12px;
+    }
+
+    .turmaInfo {
+        padding: 6px 2px;
+        width: 90%;
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+
+    .turmaHeader {
+        font-size: 9px;
+        gap: 1px;
+    }
+
+    .turmaHeader i {
+        font-size: 10px;
+    }
+
+    .turmaHeader span {
+        max-width: 30px;
+        font-size: 8px;
+        line-height: 1.1;
+    }
+
+    .trocarTurma {
+        width: 20px;
+        height: 20px;
+        font-size: 8px;
+        border-radius: 4px;
+    }
+
+    /* Menu do usuário em mobile muito pequeno */
+    .userMenu {
+        left: 55px;
+        min-width: 160px;
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .userInfo {
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+    }
+
+    .userInfo strong {
+        font-size: 12px;
+    }
+
+    .userInfo span {
+        font-size: 10px;
+    }
+
+    .userInfo small {
+        font-size: 9px;
+    }
+
+    .logoutButton {
+        padding: 6px;
+        font-size: 10px;
+    }
+
+    .perfilButton {
+        padding: 6px;
+        font-size: 10px;
+    }
+}
+
+/* Hover states responsivos */
+@media (hover: hover) {
+    .navButtons>button:hover {
+        background: rgba(52, 152, 219, 0.3);
+        border-radius: 6px;
+        transform: scale(1.05);
+    }
+
+    .user:hover {
+        background: rgba(52, 152, 219, 0.3);
+        border-radius: 6px;
+        transform: scale(1.05);
+    }
+
+    .logoutButton:hover {
+        background: #c0392b;
+        transform: translateY(-1px);
+    }
+
+    .perfilButton:hover {
+        background: #2980b9;
+        transform: translateY(-1px);
+    }
+}
+
+/* Para dispositivos touch, remover hover effects */
+@media (hover: none) {
+
+    .navButtons>button:hover,
+    .user:hover,
+    .logoutButton:hover,
+    .perfilButton:hover,
+    .trocarTurma:hover {
+        transform: none;
+        background: inherit;
+    }
+
+    .trocarTurma:hover {
+        background: rgba(52, 152, 219, 0.2);
+        color: #3498db;
+    }
+
+    .perfilButton:hover {
+        background: #3498db;
+    }
+
+    .logoutButton:hover {
+        background: #e74c3c;
+    }
 }

@@ -4,14 +4,14 @@ const pool = require('../db');
 /**
  * Criar uma nova lista de exercícios
  */
-const criarLista = async (titulo, descricao, exercicios) => {
+const criarLista = async (titulo, descricao, exercicios, id_turma) => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
 
         const resultLista = await client.query(
-            'INSERT INTO lista (titulo, descricao) VALUES ($1, $2) RETURNING id;',
-            [titulo, descricao]
+            'INSERT INTO lista (titulo, descricao, id_turma) VALUES ($1, $2, $3) RETURNING id;',
+            [titulo, descricao, id_turma]
         );
         const novaListaId = resultLista.rows[0].id;
 
@@ -33,17 +33,27 @@ const criarLista = async (titulo, descricao, exercicios) => {
 };
 
 /**
- * Listar todas as listas de exercícios
+ * Listar todas as listas de exercícios (com filtro opcional por turma)
  */
-const listarListas = async () => {
-    const query = `
-    SELECT lista.id, lista.titulo, lista.descricao, COUNT(le.id_exercicio) AS total_exercicios
-    FROM lista
-    LEFT JOIN lista_exercicio le ON lista.id = le.id_lista
-    GROUP BY lista.id, lista.titulo, lista.descricao
-    ORDER BY lista.id ASC;
-  `;
-    const result = await pool.query(query);
+const listarListas = async (id_turma = null) => {
+    let query = `
+        SELECT lista.id, lista.titulo, lista.descricao, lista.id_turma, COUNT(le.id_exercicio) AS total_exercicios
+        FROM lista
+        LEFT JOIN lista_exercicio le ON lista.id = le.id_lista
+    `;
+
+    const params = [];
+    if (id_turma) {
+        query += ' WHERE lista.id_turma = $1';
+        params.push(id_turma);
+    }
+
+    query += `
+        GROUP BY lista.id, lista.titulo, lista.descricao, lista.id_turma
+        ORDER BY lista.id ASC;
+    `;
+
+    const result = await pool.query(query, params);
     return result.rows;
 };
 
@@ -77,14 +87,14 @@ const buscarListaPorId = async (id) => {
 /**
  * Atualizar uma lista existente
  */
-const atualizarLista = async (id, titulo, descricao, exercicios) => {
+const atualizarLista = async (id, titulo, descricao, exercicios, id_turma) => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
 
         await client.query(
-            'UPDATE lista SET titulo = $1, descricao = $2 WHERE id = $3;',
-            [titulo, descricao, id]
+            'UPDATE lista SET titulo = $1, descricao = $2, id_turma = $3 WHERE id = $4;',
+            [titulo, descricao, id_turma, id]
         );
 
         await client.query('DELETE FROM lista_exercicio WHERE id_lista = $1;', [id]);
@@ -129,10 +139,46 @@ const deletarLista = async (id) => {
     }
 };
 
+/**
+ * Listar exercícios de uma lista específica
+ */
+const listarExerciciosDaLista = async (id_lista) => {
+    const result = await pool.query(`
+        SELECT e.id, e.titulo, e.enunciado, e.dificuldade, e.id_mapa
+        FROM exercicio e
+        INNER JOIN lista_exercicio le ON e.id = le.id_exercicio
+        WHERE le.id_lista = $1
+        ORDER BY e.id ASC;
+    `, [id_lista]);
+    return result.rows;
+};
+
+/**
+ * Adicionar exercício a uma lista
+ */
+const adicionarExercicioNaLista = async (id_lista, id_exercicio) => {
+    // Verificar se o exercício já está na lista
+    const exists = await pool.query(
+        'SELECT 1 FROM lista_exercicio WHERE id_lista = $1 AND id_exercicio = $2;',
+        [id_lista, id_exercicio]
+    );
+
+    if (exists.rows.length > 0) {
+        throw new Error('Exercício já está na lista');
+    }
+
+    await pool.query(
+        'INSERT INTO lista_exercicio (id_lista, id_exercicio) VALUES ($1, $2);',
+        [id_lista, id_exercicio]
+    );
+};
+
 module.exports = {
     criarLista,
     listarListas,
     buscarListaPorId,
     atualizarLista,
-    deletarLista
+    deletarLista,
+    listarExerciciosDaLista,
+    adicionarExercicioNaLista
 };

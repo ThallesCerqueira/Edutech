@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import ModalBase from '../ModalBase';
+import ExercicioSelector from '../../ExercicioSelector';
 import baseStyles from '../index.module.css';
 
 export default function ModalUniversal({
@@ -57,6 +58,10 @@ export default function ModalUniversal({
             // Campo obrigatório - validação específica para tipos especiais
             if (field.required) {
                 if (field.type === 'multiselect') {
+                    if (!value || !Array.isArray(value) || value.length === 0) {
+                        errors[field.key] = `${field.label} é obrigatório`;
+                    }
+                } else if (field.type === 'exercicios') {
                     if (!value || !Array.isArray(value) || value.length === 0) {
                         errors[field.key] = `${field.label} é obrigatório`;
                     }
@@ -465,6 +470,18 @@ export default function ModalUniversal({
                 break;
             case 'password':
                 fieldElement = <input {...commonProps} type="password" />;
+                break;
+            case 'exercicios':
+                fieldElement = (
+                    <ExercicioSelector
+                        exerciciosDisponiveis={field.exerciciosDisponiveis || []}
+                        exerciciosSelecionados={formData[field.key] || []}
+                        onChange={(selectedIds) => handleInputChange(field.key, selectedIds)}
+                        placeholder={field.placeholder}
+                        disabled={isLoading || field.disabled}
+                        className={hasError ? baseStyles.inputError : ''}
+                    />
+                );
                 break;
             case 'hidden':
                 fieldElement = <input {...commonProps} type="hidden" />;

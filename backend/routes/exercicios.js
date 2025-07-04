@@ -3,82 +3,48 @@ const express = require('express');
 const router = express.Router();
 const exercicioController = require('../controllers/exercicioController');
 const { asyncHandler } = require('../middlewares/errorHandler');
+const { verifyToken, requireAdminOrProfessor, checkTurmaAccess } = require('../middlewares/authMiddleware');
 
 /**
  * POST /exercicios
  * Endpoint para criar um novo exercício.
- * Exemplo de corpo da requisição:
- * {
- *   "titulo": "Exercício 1",
- *   "enunciado": "Qual é a capital da França?",
- *   "dificuldade": "Fácil",
- *   "id_mapa": 1,
- *   "alternativas": [
- *     { "correta": true, "descricao": "Paris" },
- *     { "correta": false, "descricao": "Londres" },
- *     { "correta": false, "descricao": "Berlim" },
- *     { "correta": false, "descricao": "Madri" }
- *   ]
- * }
+ * Apenas admins e professores podem criar exercícios.
  */
-router.post('/', asyncHandler(exercicioController.criarExercicio));
+router.post('/', verifyToken, requireAdminOrProfessor, asyncHandler(exercicioController.criarExercicio));
 
 /**
- * GET /exercicios
- * Endpoint para listar todos os exercícios.
- * Retorna um array de objetos com id, titulo e dificuldade.
- * Exemplo de resposta:
- * [
- *   { "id": 1, "titulo": "Exercício 1", "dificuldade": "Fácil" },
- *   { "id": 2, "titulo": "Exercício 2", "dificuldade": "Médio" }
- * ]
+ * GET /exercicios/turma/:id_turma
+ * Endpoint para listar exercícios de uma turma específica.
+ * Todos os usuários autenticados podem ver exercícios da turma à qual pertencem.
  */
-router.get('/', asyncHandler(exercicioController.listarExercicios));
+router.get('/turma/:id_turma', verifyToken, checkTurmaAccess, asyncHandler(exercicioController.listarExerciciosPorTurma));
 
 /**
  * GET /exercicios/:id
  * Endpoint para buscar um exercício específico pelo ID.
- * Retorna o exercício com suas alternativas.
- * Exemplo de resposta:
- * {
- *   "id": 1,
- *   "titulo": "Exercício 1",
- *   "enunciado": "Qual é a capital da França?",
- *   "dificuldade": "Fácil",
- *   "alternativas": [
- *     { "id": 1, "correta": true, "descricao": "Paris" },
- *     { "id": 2, "correta": false, "descricao": "Londres" },
- *     { "id": 3, "correta": false, "descricao": "Berlim" },
- *     { "id": 4, "correta": false, "descricao": "Madri" }
- *   ]
- * }
+ * Todos os usuários autenticados podem ver exercícios.
  */
-router.get('/:id', asyncHandler(exercicioController.buscarExercicioPorId));
+router.get('/:id', verifyToken, asyncHandler(exercicioController.buscarExercicioPorId));
+
+/**
+ * GET /exercicios
+ * Endpoint para listar todos os exercícios.
+ * Todos os usuários autenticados podem ver exercícios.
+ */
+router.get('/', verifyToken, asyncHandler(exercicioController.listarExercicios));
 
 /**
  * PUT /exercicios/:id
  * Endpoint para atualizar um exercício existente.
- * Exemplo de corpo da requisição:
- * {
- *   "titulo": "Exercício 1 Atualizado",
- *   "enunciado": "Qual é a capital da Alemanha?",
- *   "dificuldade": "Médio",
- *   "id_mapa": 1,
- *   "alternativas": [
- *     { "correta": true, "descricao": "Berlim" },
- *     { "correta": false, "descricao": "Paris" },
- *     { "correta": false, "descricao": "Londres" },
- *     { "correta": false, "descricao": "Madri" }
- *   ]
- * }
+ * Apenas admins e professores podem editar exercícios.
  */
-router.put('/:id', asyncHandler(exercicioController.atualizarExercicio));
+router.put('/:id', verifyToken, requireAdminOrProfessor, asyncHandler(exercicioController.atualizarExercicio));
 
 /**
  * DELETE /exercicios/:id
  * Endpoint para deletar um exercício pelo ID.
- * Retorna uma mensagem de sucesso ou erro.
+ * Apenas admins e professores podem excluir exercícios.
  */
-router.delete('/:id', asyncHandler(exercicioController.deletarExercicio));
+router.delete('/:id', verifyToken, requireAdminOrProfessor, asyncHandler(exercicioController.deletarExercicio));
 
 module.exports = router;
